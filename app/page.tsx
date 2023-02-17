@@ -1,6 +1,7 @@
 'use client'
+import {useRouter} from 'next/navigation';
 
-function login()
+function login(router: any)
 {
   let windowWidth : number = 500;
   let windowHeight : number = 700;
@@ -9,9 +10,9 @@ function login()
   const y = window.top!.outerHeight / 2 + window.top!.screenY - (windowHeight / 2);
   const x = window.top!.outerWidth / 2 + window.top!.screenX - (windowWidth / 2);
   let popup = window.open(`https://github.com/login/oauth/authorize?client_id=${cliend_id}&scope=${scope}`,"", `top=${y}, left=${x}, width=${windowWidth}, height=${windowHeight}`);
-  var timer = setInterval(() => checkWindow(), 1000);
+  var timer = setInterval(() => checkWindow(router), 1000);
   
-  function checkWindow(): void
+  function checkWindow(router: any): void
   {
     try{
       let query = popup!.location.search;
@@ -22,7 +23,7 @@ function login()
         sleep(3000).then(() => popup?.close())
                    .then(() => sleep(500))
                    .then(() => getToken(code))
-                   .then(token => toAfterLogin(token));
+                   .then(token => toAfterLogin(token, router));
       }
     } catch (e) {
       console.log(e);
@@ -52,17 +53,19 @@ function login()
       return token;
     }
 
-    function toAfterLogin(token: string)
+    function toAfterLogin(token: string, router: any)
     {
-      window.location.replace("AfterLogin?access_token=" + token);
+      router.push("AfterLogin?access_token=" + token)
     }
   } 
 }
 
 export default function Home() {
+
+  const router = useRouter();
   return (
     <main>
-      <button onClick={() => login()}>Click to oauth</button>
+      <button onClick={() => login(router)}>Click to oauth</button>
     </main>
   )
 }
