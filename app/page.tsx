@@ -66,6 +66,7 @@ export default function Home() {
   return (
     <main>
       <button onClick={() => login(router)}>Click to oauth</button>
+      <p className='bg-slate-700'>test </p>
     </main>
   )
 }
