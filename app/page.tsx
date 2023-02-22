@@ -61,12 +61,12 @@ function login(router: any)
 }
 
 export default function Home() {
-
   const router = useRouter();
+  console.log("aa")
   return (
     <main>
       <button onClick={() => login(router)}>Click to oauth</button>
-      <p className='bg-slate-700'>test </p>
     </main>
   )
 }
+
