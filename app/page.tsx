@@ -62,7 +62,6 @@ function login(router: any)
 
 export default function Home() {
   const router = useRouter();
-  console.log("aa")
   return (
     <main>
       <button onClick={() => login(router)}>Click to oauth</button>
