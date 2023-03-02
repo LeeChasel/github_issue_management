@@ -21,6 +21,13 @@ interface FormUser
     login: string;
     avatar_url: string;
 }
+interface FormContent
+{
+    state: string;
+    title: string;
+    body: string;
+    user: FormUser;
+}
 
 function getUsername()
 {
@@ -34,6 +41,26 @@ function getUsername()
         }).then(res => res.json()).then(r => setUsername(r.login));
     },[])
     return username;
+}
+
+function IssueContent()
+{
+    const [content, setContent] = useState<FormContent>()
+    useEffect(() => {
+        fetch(`https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}`, {
+            headers: {
+                "Accept" : "application/vnd.github+json",
+                "Authorization" : `Bearer ${token}`,
+            }
+        }).then(res => res.json()).then(r => setContent(r))
+    }, []);
+    return (
+        <div>
+        <h1>{content?.title}</h1>
+        <p>{content?.body}</p>
+        <p>from {content?.user.login}</p>
+        </div>
+    )
 }
 
 function fetchData(): Promise<FormComment[]>
@@ -77,7 +104,7 @@ export default function IssueDetailPage({params}:{params:{id: string}})
 
     return (
         <>
-        <div>{username}</div>
+        <IssueContent />
         <IssueComments/>
         </>
     )
