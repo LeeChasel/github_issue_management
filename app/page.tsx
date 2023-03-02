@@ -6,7 +6,7 @@ function login(router: any)
   let windowWidth : number = 500;
   let windowHeight : number = 700;
   let cliend_id = "a72341c3b401536e1dea";
-  let scope = "repo";
+  let scope = "repo%20user";
   const y = window.top!.outerHeight / 2 + window.top!.screenY - (windowHeight / 2);
   const x = window.top!.outerWidth / 2 + window.top!.screenX - (windowWidth / 2);
   let popup = window.open(`https://github.com/login/oauth/authorize?client_id=${cliend_id}&scope=${scope}`,"", `top=${y}, left=${x}, width=${windowWidth}, height=${windowHeight}`);

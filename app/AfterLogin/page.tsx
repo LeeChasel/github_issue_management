@@ -7,7 +7,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 
 let owner = "LeeChasel";
 let repo = "dcard_intern_homework";
-let token = "0";
+let token = "";
 
 interface FormData 
 {
@@ -87,7 +87,7 @@ export default function afterLogin()
     const searchParams = useSearchParams();
     token = searchParams.get("access_token")!;
     return (
-        <main>
+        <main>  
             <GetDataUseInfiniteScroll/>
         </main>
     )
