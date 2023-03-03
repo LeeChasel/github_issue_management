@@ -2,13 +2,11 @@
 
 import { useSearchParams } from "next/navigation";
 import {useState, useEffect} from "react"
+import { getUsername, getIssueContent, getComments } from "@/app/(fetchResource)";
 
-let owner = "LeeChasel";
-let repo = "dcard_intern_homework";
-let issue_number = "0";
+let issue_number = "";
 let token = "";
 let username = "";
-
 
 interface FormComment 
 {
@@ -29,30 +27,20 @@ interface FormContent
     user: FormUser;
 }
 
-function getUsername()
+function setUsername()
 {
-    const [username, setUsername] = useState("");
+    const [name, setName] = useState("");
     useEffect(() => {
-        fetch("https://api.github.com/user", {
-            headers: {
-                "Accept" : "application/vnd.github+json",
-                "Authorization" : `Bearer ${token}`,
-            }
-        }).then(res => res.json()).then(r => setUsername(r.login));
+        getUsername(token).then(res => setName(res));
     },[])
-    return username;
+    return name;
 }
 
 function IssueContent()
 {
     const [content, setContent] = useState<FormContent>()
     useEffect(() => {
-        fetch(`https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}`, {
-            headers: {
-                "Accept" : "application/vnd.github+json",
-                "Authorization" : `Bearer ${token}`,
-            }
-        }).then(res => res.json()).then(r => setContent(r))
+        getIssueContent(token, issue_number).then(res => setContent(res))
     }, []);
     return (
         <div>
@@ -63,25 +51,12 @@ function IssueContent()
     )
 }
 
-function fetchData(): Promise<FormComment[]>
-{
-    return fetch(`https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}/comments`,{
-        headers: {
-            "Accept" : "application/vnd.github+json",
-            "Authorization" : `Bearer ${token}`,
-        }
-    }).then(res => res.json())
-}
-
 function IssueComments()
 {
     const [comments, setComments] = useState<FormComment[]>([]);
     useEffect(() => {
-        fetchData().then(res => {
-            setComments(res);
-        })
+        getComments(token, issue_number).then(res => setComments(res))
     },[])
-     
     return (
         <div>
             {comments.map((comment) => (
@@ -90,7 +65,6 @@ function IssueComments()
                     <br/>
                 </div>
             ))}
-            
         </div>
     )
 }
@@ -100,8 +74,8 @@ export default function IssueDetailPage({params}:{params:{id: string}})
     const searchParams = useSearchParams();
     token = searchParams.get("access_token")!;
     issue_number = params.id;
-    username = getUsername();
-
+    username = setUsername();
+    
     return (
         <>
         <IssueContent />
