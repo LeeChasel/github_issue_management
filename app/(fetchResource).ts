@@ -45,6 +45,42 @@ export function getComments(token:string, issue_number:string): Promise<FormComm
         headers: {
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
-        }
+        },
+        cache: "no-cache"
     }).then(res => res.json())
+}
+
+export function createComment(comment:any, issue_number:string, token:string)
+{
+    fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issue_number}/comments`, {
+        headers: {
+            "Accept" : "application/vnd.github+json",
+            "Authorization" : `Bearer ${token}`,
+        },
+        method: "POST",
+        body: JSON.stringify(comment),
+    }).catch(err => console.log(err));   
+}
+
+export function updateComment(comment:any, id:string, token:string)
+{
+    fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/comments/${id}`, {
+        headers: {
+            "Accept" : "application/vnd.github+json",
+            "Authorization" : `Bearer ${token}`,
+        },
+        method: "PATCH",
+        body: JSON.stringify(comment),
+    }).catch(err => console.log(err));
+}
+
+export function deleteComment(token:string, id:string)
+{
+    fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/comments/${id}`, {
+        headers: {
+            "Accept" : "application/vnd.github+json",
+            "Authorization" : `Bearer ${token}`,
+        },
+        method: "DELETE",
+    }).catch(err => console.log(err));
 }

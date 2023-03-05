@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect} from 'react';
 // import useSWR from 'swr';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import CreateIssueUI from '../components/(createIssueUI)';
 
 let owner = "LeeChasel";
 let repo = "dcard_intern_homework";
@@ -54,8 +55,7 @@ function GetDataUseInfiniteScroll()
 
     return (
         <div>
-            <h1>data is here</h1>
-            <hr/>
+            <br/>
             <InfiniteScroll
             dataLength={items.length}
             next={fetchMoreData}
@@ -75,9 +75,9 @@ function GetDataUseInfiniteScroll()
                         </Link>
                         <span>{item.title} - {item.body}</span>
                     </div>
-                ))} 
+                ))}
+            <br/>
             </InfiniteScroll>
-            {items.length}
         </div>
     )
 }
@@ -89,6 +89,7 @@ export default function afterLogin()
     return (
         <main>  
             <GetDataUseInfiniteScroll/>
+            <CreateIssueUI token={token}/>
         </main>
     )
 }
