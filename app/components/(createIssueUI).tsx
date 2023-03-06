@@ -1,14 +1,18 @@
 import { Dialog } from '@headlessui/react';
 import { useState } from 'react';
-
+import { createIssue } from '../(fetchResource)';
 
 export default function CreateIssueUI({token}:{token:string})
 {
     const [isopen, setIsopen] = useState(false);
 
-    function handleSubmit()
+    function handleSubmit(e:any)
     {
-
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const formJson = Object.fromEntries(formData.entries());
+        console.log(formJson)
+        
     }
 
     return (
@@ -31,6 +35,7 @@ export default function CreateIssueUI({token}:{token:string})
                                     rows={4}
                                     cols={40}
                                     required
+                                    // minLength={30}
                                 />
                             </label>
                             <div className="relative">

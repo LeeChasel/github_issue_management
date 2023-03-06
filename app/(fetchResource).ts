@@ -84,3 +84,18 @@ export function deleteComment(token:string, id:string)
         method: "DELETE",
     }).catch(err => console.log(err));
 }
+
+export function getLebelsInRepo(token:string)
+{
+    fetch(`https://api.github.com/repos/${OWNER}/${REPO}/labels`, {
+        headers: {
+            "Accept" : "application/vnd.github+json",
+            "Authorization" : `Bearer ${token}`,
+        },
+    }).then(res => res.json()).catch(err => console.log(err));
+}
+
+export function createIssue(token:string)
+{
+
+}

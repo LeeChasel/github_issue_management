@@ -5,6 +5,8 @@ import { useState, useEffect} from 'react';
 // import useSWR from 'swr';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateIssueUI from '../components/(createIssueUI)';
+import { getLebelsInRepo } from '../(fetchResource)';
+import { Listbox } from '@headlessui/react'
 
 let owner = "LeeChasel";
 let repo = "dcard_intern_homework";
@@ -82,14 +84,28 @@ function GetDataUseInfiniteScroll()
     )
 }
 
+function LabelsSel()
+{
+
+    const labels = getLebelsInRepo(token);
+    console.log(labels)
+    // const [selectedLabel, setSelectedLabel] = useState(labels[0])
+
+    
+
+
+}
+
 export default function afterLogin()
 {
     const searchParams = useSearchParams();
     token = searchParams.get("access_token")!;
     return (
-        <main>  
+        <main>
+            <LabelsSel />
             <GetDataUseInfiniteScroll/>
             <CreateIssueUI token={token}/>
+            
         </main>
     )
 }
