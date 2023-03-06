@@ -87,7 +87,7 @@ export function deleteComment(token:string, id:string)
 
 export function getLebelsInRepo(token:string)
 {
-    fetch(`https://api.github.com/repos/${OWNER}/${REPO}/labels`, {
+    return fetch(`https://api.github.com/repos/${OWNER}/${REPO}/labels`, {
         headers: {
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
