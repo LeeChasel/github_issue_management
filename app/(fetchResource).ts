@@ -95,7 +95,23 @@ export function getLebelsInRepo(token:string)
     }).then(res => res.json()).catch(err => console.log(err));
 }
 
-export function createIssue(token:string)
+export function createIssue(token:string, data:any)
 {
-
+    window.alert("Successful create new issue")
+    let label = data.labels
+    if (label == "none")
+    {
+        delete data.labels
+    } else {
+        data.labels = [label]
+    }
+    
+    fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues`, {
+        headers: {
+            "Accept" : "application/vnd.github+json",
+            "Authorization" : `Bearer ${token}`,
+        },
+        method: "POST",
+        body: JSON.stringify(data),
+    }).then(res => res.json()).catch(err => console.log(err))
 }

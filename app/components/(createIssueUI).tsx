@@ -1,18 +1,34 @@
 import { Dialog } from '@headlessui/react';
-import { useState } from 'react';
-import { createIssue } from '../(fetchResource)';
+import { useState, useEffect } from 'react';
+import { getLebelsInRepo, createIssue } from '../(fetchResource)';
+
+interface Labels
+{
+    color: string;
+    id: number;
+    name: string;
+}
 
 export default function CreateIssueUI({token}:{token:string})
 {
     const [isopen, setIsopen] = useState(false);
+    const [data, setData] = useState<Labels[]>([]);
+    useEffect(() => {
+        getLebelsInRepo(token).then(res => {
+            let newRes: Labels[] = res.map((item:any) => {
+                return {color: item.color, id: item.id, name: item.name};
+            })
+            setData([...data, ...newRes]);
+        });
+    }, [])
 
     function handleSubmit(e:any)
     {
         e.preventDefault();
         const formData = new FormData(e.target);
         const formJson = Object.fromEntries(formData.entries());
-        console.log(formJson)
-        
+        createIssue(token, formJson);
+        setIsopen(false)
     }
 
     return (
@@ -35,8 +51,17 @@ export default function CreateIssueUI({token}:{token:string})
                                     rows={4}
                                     cols={40}
                                     required
-                                    // minLength={30}
+                                    minLength={30}
                                 />
+                            </label>
+                            <label>
+                                <span>Choose label : </span>
+                                <select name='labels'>
+                                    <option value="none">None label</option>
+                                    {data.map(label => (
+                                        <option key={label.id} value={label.name}>{label.name}</option>
+                                    ))}
+                                </select>
                             </label>
                             <div className="relative">
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Create New Issue</button>

@@ -6,7 +6,6 @@ import { useState, useEffect} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateIssueUI from '../components/(createIssueUI)';
 import { getLebelsInRepo } from '../(fetchResource)';
-import { Listbox } from '@headlessui/react'
 
 let owner = "LeeChasel";
 let repo = "dcard_intern_homework";
@@ -14,12 +13,10 @@ let token = "";
 
 interface FormData 
 {
-    url: string;
-    html_url: string;
     title: string;
     body: string; 
     number: string;
-    labels: [];
+    labels: Labels[];
 }
 interface Labels
 {
@@ -29,10 +26,11 @@ interface Labels
 }
     // var reverseUser = issues.map((item: FormData) => item).reverse();
 
-function fetchData(page:number): Promise<FormData[]>
+function fetchData(page:number, labels:string): Promise<FormData[]>
 {
+    if (labels == "All") labels = "";
     const pageSize = 10;
-    return fetch(`https://api.github.com/repos/${owner}/${repo}/issues?state=all&per_page=${pageSize}&page=${page}`, {
+    return fetch(`https://api.github.com/repos/${owner}/${repo}/issues?state=all&per_page=${pageSize}&page=${page}&labels=${labels}`, {
         headers: {
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
@@ -40,29 +38,34 @@ function fetchData(page:number): Promise<FormData[]>
     }).then(res => res.json())
 }
 
-function GetDataUseInfiniteScroll({selectedLabel}:{selectedLabel:string | never})
+function GetDataUseInfiniteScroll()
 {
     const [items, setItems] = useState<FormData[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true)
-    const [page,  setPage] = useState<number>(1)        
-    
+    const [page,  setPage] = useState<number>(1)
+    const [selectedLabel, setSelectedLabel] = useState("default");
+
     useEffect(() => {
-        fetchData(1).then(res => {
+        setPage(1)
+        fetchData(1, selectedLabel).then(res => {
             setItems(res);
             setHasMore(res.length > 0)
-        })
-    },[])
+        })     
+    }, [selectedLabel])
 
     function fetchMoreData()
     {
-        fetchData(page + 1).then(res => {
+        fetchData(page + 1, selectedLabel).then(res => {
             setItems([...items, ...res]);
             setHasMore(res.length > 0);
             setPage(page + 1);
         });
     };
 
+    let nonedata = (items.length == 0) ? <p>None data</p> : null
     return (
+        <>
+        <LabelsSel setSelectedLabel={setSelectedLabel}/>
         <div>
             <br/>
             <InfiniteScroll
@@ -71,33 +74,28 @@ function GetDataUseInfiniteScroll({selectedLabel}:{selectedLabel:string | never}
             hasMore={hasMore}
             loader={<h4>Loading...</h4>}
             height={200}
-            endMessage={
-                <p className='text-center'>
-                    <b>This is the end</b>
-                </p>
-            }
             >
-                {items.map((item) => {
-                    // if (item.labels.indexOf(selectedLabel) == -1 ) return;
-
+                {items.map((item:FormData) => {
                     return (
                     <div key={item.number} className="h-7 m-1 p-1 border-2 border-solid border-green-400">
                         <Link href={`/AfterLogin/issues/${item.number}?access_token=${token}`}>
-                            <span>{item.number}.  </span>
+                            <span>#{item.number}  _</span>
                         </Link>
-                        <span>{item.title} - {item.body}</span>
+                        <span>{item.title} - {item.body} - {item.labels.map(i => {return i.name})}</span>
                     </div>
                     )
                 })}
-            <br/>
+                {nonedata}
+                <br/>
             </InfiniteScroll>
         </div>
+        </>
     )
 }
 
-function LabelsSel({selectedLabel, setSelectedLabel}:{selectedLabel:string, setSelectedLabel: any})
+function LabelsSel({setSelectedLabel}:{setSelectedLabel: any})
 {
-    const [data, setData] = useState<Labels[]>([{color: "33FFE6", id: 0, name: "default"}]);
+    const [data, setData] = useState<Labels[]>([{color: "33FFE6", id: 0, name: "All"}]);
     useEffect(() => {
         getLebelsInRepo(token).then(res => {
             let newRes: Labels[] = res.map((item:any) => {
@@ -107,7 +105,6 @@ function LabelsSel({selectedLabel, setSelectedLabel}:{selectedLabel:string, setS
         });
     }, [])
 
-    
     return (
         <>
         <select name="selectLabel" onChange={e => setSelectedLabel(e.target.value)}>
@@ -124,11 +121,9 @@ export default function afterLogin()
 {
     const searchParams = useSearchParams();
     token = searchParams.get("access_token")!;
-    const [selectedLabel, setSelectedLabel] = useState("default");
     return (
         <main>
-            <LabelsSel selectedLabel={selectedLabel} setSelectedLabel={setSelectedLabel}/>
-            <GetDataUseInfiniteScroll selectedLabel={selectedLabel}/>
+            <GetDataUseInfiniteScroll/>
             <CreateIssueUI token={token}/>
         </main>
     )
