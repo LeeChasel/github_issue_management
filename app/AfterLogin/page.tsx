@@ -34,7 +34,7 @@ function fetchData(page:number, labels:string): Promise<FormData[]>
         headers: {
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
-        }
+        },
     }).then(res => res.json())
 }
 
@@ -43,7 +43,7 @@ function GetDataUseInfiniteScroll()
     const [items, setItems] = useState<FormData[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true)
     const [page,  setPage] = useState<number>(1)
-    const [selectedLabel, setSelectedLabel] = useState("default");
+    const [selectedLabel, setSelectedLabel] = useState("All");
 
     useEffect(() => {
         setPage(1)
