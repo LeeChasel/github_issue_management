@@ -3,10 +3,12 @@ let REPO = "dcard_intern_homework";
 
 interface FormContent
 {
+    number: number;
     state: string;
     title: string;
     body: string;
     user: FormUser;
+    labels: Labels[];
 }
 interface FormComment 
 {
@@ -18,6 +20,12 @@ interface FormUser
 {
     login: string;
     avatar_url: string;
+}
+interface Labels
+{
+    color: string;
+    id: number;
+    name: string;
 }
 
 export function getUsername(token:string): Promise<string>
@@ -36,7 +44,7 @@ export function getIssueContent(token:string, issue_number:string): Promise<Form
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
         }
-    }).then(res => res.json())
+    }).then(res => res.json()) 
 }
 
 export function getComments(token:string, issue_number:string): Promise<FormComment[]>
@@ -114,4 +122,16 @@ export function createIssue(token:string, data:any)
         method: "POST",
         body: JSON.stringify(data),
     }).then(res => res.json()).catch(err => console.log(err))
+}
+
+export function updateIssue(token:string, issue_number:string, data:any)
+{
+    fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issue_number}`, {
+        headers: {
+            "Accept" : "application/vnd.github+json",
+            "Authorization" : `Bearer ${token}`,
+        },
+        method: "PATCH",
+        body: JSON.stringify(data),
+    }).then(res => res.json()).catch(err => console.log(err));
 }

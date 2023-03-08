@@ -5,6 +5,7 @@ import { useState, useEffect} from "react"
 import { getIssueContent, getComments, getUsername } from "@/app/(fetchResource)";
 import CreateCommentUI from "@/app/components/createCommentUI";
 import UpdateCommentUI from "@/app/components/(updateCommentUI)";
+import UpdateIssueUI from "@/app/components/(updateIssueUI)";
 import { DeleteCommentUI } from "@/app/components/(deleteCommentUI)";
 
 let issue_number = "";
@@ -24,10 +25,18 @@ interface FormUser
 }
 interface FormContent
 {
+    number: number;
     state: string;
     title: string;
     body: string;
     user: FormUser;
+    labels: Labels[];
+}
+interface Labels
+{
+    color: string;
+    id: number;
+    name: string;
 }
 
 function IssueContent()
@@ -41,10 +50,13 @@ function IssueContent()
         <div>
             <h1 className="text-red-600 font-bold text-4xl">{content?.title} #{issue_number}</h1>
         </div>
-        <div className="">
-            <h3 className="text-blue-500">created by {content?.user.login}</h3>
+        <div>
             <p className="bg-gray-400">{content?.body}</p>
+            <h3 className="text-blue-500">created by {content?.user.login}</h3>
+            <h3 className="text-blue-500">status: {content?.state}</h3>
+            <h3 className="text-blue-500">label: {content?.labels[0].name}</h3>
         </div>
+        <UpdateIssueUI token={token} data={content!}/>
         <br/>
         </div>
     )
