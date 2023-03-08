@@ -106,12 +106,11 @@ export function getLebelsInRepo(token:string)
 export function createIssue(token:string, data:any)
 {
     window.alert("Successful create new issue")
-    let label = data.labels
-    if (label == "none")
+    if (data.labels == "none")
     {
         delete data.labels
     } else {
-        data.labels = [label]
+        data.labels = [data.labels]
     }
     
     fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues`, {
@@ -124,8 +123,9 @@ export function createIssue(token:string, data:any)
     }).then(res => res.json()).catch(err => console.log(err))
 }
 
-export function updateIssue(token:string, issue_number:string, data:any)
+export function updateIssue(token:string, issue_number:number, data:any)
 {
+    data.labels = [data.labels]
     fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issue_number}`, {
         headers: {
             "Accept" : "application/vnd.github+json",

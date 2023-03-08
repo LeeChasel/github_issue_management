@@ -17,27 +17,28 @@ interface Labels
     name: string;
 }
 
-function LabelsSel({token}: {token:string})
+function LabelsSel({token, selectedLabel}: {token:string, selectedLabel:string})
 {
-    const [data, setData] = useState<Labels[]>([])
+    const [labels, setLabels] = useState<Labels[]>([])
     useEffect(() => {
         getLebelsInRepo(token).then(res => {
             let newRes: Labels[] = res.map((item:any) => {
                 return {color: item.color, id: item.id, name: item.name};
             })
-            setData([...data, ...newRes]);
+            setLabels([...labels, ...newRes]);
         });
     }, [])
 
+    // use this way to set default option would cause err, but still working. change to react select package later.
     return (
         <>
         <label>
-            choose label
-            <select name="selectLabel">
-                {data.map(value => (
-                    //補顏色 use value.color
-                    <option key={value.id} value={value.name}>{value.name}</option>
-                ))}
+            <span>choose label : </span>
+            <select name="labels">
+                {labels.map(label => {
+                    if (label.name == selectedLabel) return <option key={label.id} selected value={label.name}>{label.name}</option>
+                    return <option key={label.id} value={label.name}>{label.name}</option>
+                })}
             </select>
         </label>
         </>
@@ -50,11 +51,13 @@ export default function UpdateIssueUI({token, data}:{token:string, data: FormCon
 
     function handleSubmit(e:any)
     {
-        
+        // e.preventDefault();
+        const formData = new FormData(e.target);
+        const formJson = Object.fromEntries(formData.entries());
+        updateIssue(token, data.number, formJson);
+        // setIsopen(false)
     }
-    console.log(data)
-    
-    
+   
     return (
         <>
         <button onClick={() => setIsopen(true)}>Edit Issue</button>
@@ -66,7 +69,7 @@ export default function UpdateIssueUI({token, data}:{token:string, data: FormCon
                         <form method='post' onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
                             <label className='block'>
                                 <span>Edit title : </span>
-                                <input defaultValue={data.title} type="text" id="title" name="title" required className='indent-1 mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0'/>
+                                <input defaultValue={data ? data.title : ""} type="text" id="title" name="title" required className='indent-1 mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0'/>
                             </label>
                             <label>
                                 Edit your Issue Comment here : 
@@ -74,12 +77,12 @@ export default function UpdateIssueUI({token, data}:{token:string, data: FormCon
                                     name='body'
                                     rows={4}
                                     cols={40}
-                                    // defaultValue={data.body}
+                                    defaultValue={data ? data.body : ""}
                                     required
                                     // minLength={30}
                                 />
                             </label>
-                            <LabelsSel token={token}/>
+                            <LabelsSel token={token} selectedLabel={data ? data.labels[0].name : ""}/>
                             <div className="relative">
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Edit Data</button>
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 right-0 w-5/12 absolute" onClick={() => setIsopen(false)}>Cancel</button>
