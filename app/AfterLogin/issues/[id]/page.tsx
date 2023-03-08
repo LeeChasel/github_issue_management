@@ -7,6 +7,7 @@ import CreateCommentUI from "@/app/components/createCommentUI";
 import UpdateCommentUI from "@/app/components/(updateCommentUI)";
 import UpdateIssueUI from "@/app/components/(updateIssueUI)";
 import { DeleteCommentUI } from "@/app/components/(deleteCommentUI)";
+import DeleteIssueUI from "@/app/components/(deleteIssueUI)";
 
 let issue_number = "";
 let token = "";
@@ -56,7 +57,12 @@ function IssueContent()
             <h3 className="text-blue-500">status: {content?.state}</h3>
             <h3 className="text-blue-500">label: {content?.labels[0].name}</h3>
         </div>
-        <UpdateIssueUI token={token} data={content!}/>
+        {content?.user.login == username &&
+            <div>
+                <UpdateIssueUI token={token} data={content!}/>
+                <DeleteIssueUI token={token} issue_number={issue_number}/>
+            </div>
+        }       
         <br/>
         </div>
     )

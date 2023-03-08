@@ -135,3 +135,16 @@ export function updateIssue(token:string, issue_number:number, data:any)
         body: JSON.stringify(data),
     }).then(res => res.json()).catch(err => console.log(err));
 }
+
+export function deleteIssue(token:string, issue_number:string)
+{
+    let data = {state:"closed"};
+    fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issue_number}`, {
+        headers: {
+            "Accept" : "application/vnd.github+json",
+            "Authorization" : `Bearer ${token}`,
+        },
+        method: "PATCH",
+        body: JSON.stringify(data),
+    }).catch(err => console.log(err));
+}

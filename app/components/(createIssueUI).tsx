@@ -1,6 +1,7 @@
 import { Dialog } from '@headlessui/react';
 import { useState, useEffect } from 'react';
 import { getLebelsInRepo, createIssue } from '../(fetchResource)';
+import { useRouter } from 'next/navigation';
 
 interface Labels
 {
@@ -13,6 +14,7 @@ export default function CreateIssueUI({token}:{token:string})
 {
     const [isopen, setIsopen] = useState(false);
     const [data, setData] = useState<Labels[]>([]);
+    const router = useRouter()
     useEffect(() => {
         getLebelsInRepo(token).then(res => {
             let newRes: Labels[] = res.map((item:any) => {
@@ -28,6 +30,7 @@ export default function CreateIssueUI({token}:{token:string})
         const formData = new FormData(e.target);
         const formJson = Object.fromEntries(formData.entries());
         createIssue(token, formJson);
+        router.refresh();
         setIsopen(false)
     }
 
