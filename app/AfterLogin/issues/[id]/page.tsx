@@ -55,11 +55,11 @@ function IssueContent()
             <p className="bg-gray-400">{content?.body}</p>
             <h3 className="text-blue-500">created by {content?.user.login}</h3>
             <h3 className="text-blue-500">status: {content?.state}</h3>
-            <h3 className="text-blue-500">label: {content?.labels[0].name}</h3>
+            <h3 className="text-blue-500">label: {content?.labels.length ? content?.labels[0].name : "don't have label"}</h3>
         </div>
         {content?.user.login == username &&
             <div>
-                <UpdateIssueUI token={token} data={content!}/>
+                {/* <UpdateIssueUI token={token} data={content!}/> */}
                 <DeleteIssueUI token={token} issue_number={issue_number}/>
             </div>
         }       

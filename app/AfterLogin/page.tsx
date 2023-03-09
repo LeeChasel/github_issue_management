@@ -2,10 +2,10 @@
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect} from 'react';
-// import useSWR from 'swr';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateIssueUI from '../components/(createIssueUI)';
 import { getLebelsInRepo } from '../(fetchResource)';
+import { getIssuesWithSearchstring } from '../(fetchResource)';
 
 let owner = "LeeChasel";
 let repo = "dcard_intern_homework";
@@ -26,46 +26,30 @@ interface Labels
 }
     // var reverseUser = issues.map((item: FormData) => item).reverse();
 
-function fetchData(page:number, labels:string): Promise<FormData[]>
-{
-    if (labels == "All") labels = "";
-    const pageSize = 10;
-    return fetch(`https://api.github.com/repos/${owner}/${repo}/issues?state=all&per_page=${pageSize}&page=${page}&labels=${labels}`, {
-        headers: {
-            "Accept" : "application/vnd.github+json",
-            "Authorization" : `Bearer ${token}`,
-        },
-    }).then(res => res.json())
-}
-
-function GetDataUseInfiniteScroll()
+function GetDataUseInfiniteScroll({selectedLabel, searchString}:{selectedLabel:string, searchString:string})
 {
     const [items, setItems] = useState<FormData[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true)
     const [page,  setPage] = useState<number>(1)
-    const [selectedLabel, setSelectedLabel] = useState("All");
-
+    
     useEffect(() => {
         setPage(1)
-        fetchData(1, selectedLabel).then(res => {
+        getIssuesWithSearchstring(token, 1, selectedLabel, searchString).then(res => {
             setItems(res);
             setHasMore(res.length > 0)
-        })     
-    }, [selectedLabel])
+        })
+    }, [selectedLabel, searchString])
 
     function fetchMoreData()
     {
-        fetchData(page + 1, selectedLabel).then(res => {
+        getIssuesWithSearchstring(token, page + 1, selectedLabel, searchString).then(res => {
             setItems([...items, ...res]);
             setHasMore(res.length > 0);
             setPage(page + 1);
         });
     };
-
-    let nonedata = (items.length == 0) ? <p>None data</p> : null
     return (
         <>
-        <LabelsSel setSelectedLabel={setSelectedLabel}/>
         <div>
             <br/>
             <InfiniteScroll
@@ -75,18 +59,16 @@ function GetDataUseInfiniteScroll()
             loader={<h4>Loading...</h4>}
             height={200}
             >
-                {items.map((item:FormData) => {
+                {items.length ? items.map((item:FormData) => {
                     return (
                     <div key={item.number} className="h-7 m-1 p-1 border-2 border-solid border-green-400">
                         <Link href={`/AfterLogin/issues/${item.number}?access_token=${token}`}>
                             <span>#{item.number}  _</span>
                         </Link>
-                        <span>{item.title} - {item.body} - {item.labels.map(i => {return i.name})}</span>
+                        <span>{item.title} - {item.labels.map(i => {return i.name})}</span>
                     </div>
                     )
-                })}
-                {nonedata}
-                <br/>
+                }) : <p>Don't have data</p>}
             </InfiniteScroll>
         </div>
         </>
@@ -117,13 +99,42 @@ function LabelsSel({setSelectedLabel}:{setSelectedLabel: any})
     )
 }
 
+function SearchBox({searchString, setSearchString}:{searchString:string, setSearchString:any})
+{
+    function handleSubmit(e:any)
+    {
+        e.preventDefault();
+        setSearchString(e.target.search.value);
+    }
+    return (
+        <form method='POST' onSubmit={handleSubmit}>
+        <label>Seach : </label>
+        <input defaultValue={searchString} className="bg-gray-200" type="text" name='search'/>
+        <button type='submit'>Search</button>
+        </form>
+    )
+}
+
+function DisplayIssue()
+{
+    const [selectedLabel, setSelectedLabel] = useState("All");
+    const [searchString, setSearchString] = useState("");
+    return (
+        <>
+            <SearchBox searchString={searchString} setSearchString={setSearchString}/>
+            <LabelsSel setSelectedLabel={setSelectedLabel}/>
+            <GetDataUseInfiniteScroll selectedLabel={selectedLabel} searchString={searchString}/>
+        </>
+    )
+}
+
 export default function afterLogin()
 {
     const searchParams = useSearchParams();
     token = searchParams.get("access_token")!;
     return (
         <main>
-            <GetDataUseInfiniteScroll/>
+            <DisplayIssue />
             <CreateIssueUI token={token}/>
         </main>
     )

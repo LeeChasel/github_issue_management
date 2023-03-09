@@ -51,7 +51,7 @@ export default function UpdateIssueUI({token, data}:{token:string, data: FormCon
 
     function handleSubmit(e:any)
     {
-        // e.preventDefault();
+        e.preventDefault();
         const formData = new FormData(e.target);
         const formJson = Object.fromEntries(formData.entries());
         updateIssue(token, data.number, formJson);
@@ -82,7 +82,7 @@ export default function UpdateIssueUI({token, data}:{token:string, data: FormCon
                                     // minLength={30}
                                 />
                             </label>
-                            <LabelsSel token={token} selectedLabel={data ? data.labels[0].name : ""}/>
+                            {/* <LabelsSel token={token} selectedLabel={data ? data.labels[0].name : ""}/> */}
                             <div className="relative">
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Edit Data</button>
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 right-0 w-5/12 absolute" onClick={() => setIsopen(false)}>Cancel</button>

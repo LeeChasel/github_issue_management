@@ -57,20 +57,10 @@ export default function CreateIssueUI({token}:{token:string})
                                     minLength={30}
                                 />
                             </label>
-                            <label>
-                                <span>Choose label : </span>
-                                <select name='labels'>
-                                    <option value="none">None label</option>
-                                    {data.map(label => (
-                                        <option key={label.id} value={label.name}>{label.name}</option>
-                                    ))}
-                                </select>
-                            </label>
                             <div className="relative">
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Create New Issue</button>
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 right-0 w-5/12 absolute" onClick={() => setIsopen(false)}>Cancel</button>
                             </div>
-
                         </form>
                     </div>
                 </Dialog.Panel>
