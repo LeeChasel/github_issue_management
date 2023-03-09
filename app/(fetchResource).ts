@@ -44,7 +44,7 @@ export function getIssueContent(token:string, issue_number:string): Promise<Form
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
         }
-    }).then(res => res.json()) 
+    }).then(res => res.json())
 }
 
 export function getComments(token:string, issue_number:string): Promise<FormComment[]>
@@ -105,6 +105,7 @@ export function getLebelsInRepo(token:string)
 
 export function createIssue(token:string, data:any)
 {
+    data.labels = ["Open"];
     fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues`, {
         headers: {
             "Accept" : "application/vnd.github+json",
@@ -143,15 +144,13 @@ export function deleteIssue(token:string, issue_number:string)
 
 export function getIssuesWithSearchstring(token:string, page:number, label:string, searchstring:string)
 {
-    let labelQuery = "";
-    if (label != "All") labelQuery = `label:${label}`;
-
     const pageSize = 10;
-    let queryString = 'q=' + encodeURIComponent(`${searchstring} repo:${OWNER}/${REPO} type:issue in:title,body,comments state:open ${labelQuery}`)
+    let queryString = 'q=' + encodeURIComponent(`${searchstring} repo:${OWNER}/${REPO} type:issue in:title,body,comments state:open ${label == "All" ? "" : `label:${label}`}`)
     return fetch(`https://api.github.com/search/issues?per_page=${pageSize}&page=${page}&${queryString}`, {
         headers: {
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
         },
-    }).then(res => res.json()).then(json => {console.log(json.items); return json.items}).catch(err => console.log(err));   
+        cache: "no-cache",
+    }).then(res => res.json()).then(json => json.items).catch(err => console.log(err));   
 }

@@ -26,12 +26,9 @@ export default function CreateIssueUI({token}:{token:string})
 
     function handleSubmit(e:any)
     {
-        e.preventDefault();
         const formData = new FormData(e.target);
         const formJson = Object.fromEntries(formData.entries());
         createIssue(token, formJson);
-        router.refresh();
-        setIsopen(false)
     }
 
     return (

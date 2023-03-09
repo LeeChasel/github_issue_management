@@ -6,9 +6,9 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateIssueUI from '../components/(createIssueUI)';
 import { getLebelsInRepo } from '../(fetchResource)';
 import { getIssuesWithSearchstring } from '../(fetchResource)';
+import { Switch } from '@headlessui/react'
 
-let owner = "LeeChasel";
-let repo = "dcard_intern_homework";
+
 let token = "";
 
 interface FormData 
@@ -24,7 +24,6 @@ interface Labels
     id: number;
     name: string;
 }
-    // var reverseUser = issues.map((item: FormData) => item).reverse();
 
 function GetDataUseInfiniteScroll({selectedLabel, searchString}:{selectedLabel:string, searchString:string})
 {
@@ -48,8 +47,34 @@ function GetDataUseInfiniteScroll({selectedLabel, searchString}:{selectedLabel:s
             setPage(page + 1);
         });
     };
+
+    function SortToggle()
+    {
+        const [sortByOld, SetSortByOld] = useState(false)
+        
+        return (
+            <div className="py-2">
+                <span>new to old</span>
+                <Switch
+                    checked={sortByOld}
+                    onChange={SetSortByOld}
+                    className={`${sortByOld ? 'bg-teal-900' : 'bg-teal-700'}
+                    relative inline-flex h-[38px] w-[74px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
+                >
+                    <span
+                    aria-hidden="true"
+                    className={`${sortByOld ? 'translate-x-9' : 'translate-x-0'}
+                        pointer-events-none inline-block h-[34px] w-[34px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+                    />
+                </Switch>
+                <span>old to new</span>
+            </div>
+        )
+    }
+
     return (
         <>
+        <SortToggle />
         <div>
             <br/>
             <InfiniteScroll

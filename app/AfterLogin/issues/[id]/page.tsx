@@ -44,7 +44,10 @@ function IssueContent()
 {
     const [content, setContent] = useState<FormContent>()
     useEffect(() => {
-        getIssueContent(token, issue_number).then(res => setContent(res))
+        getIssueContent(token, issue_number).then(res => {
+            // console.log(res.labels)
+            setContent(res);
+        })
     }, []);
     return (
         <div className="mt-3 bg-gray-400 p-2">
@@ -57,9 +60,9 @@ function IssueContent()
             <h3 className="text-blue-500">status: {content?.state}</h3>
             <h3 className="text-blue-500">label: {content?.labels.length ? content?.labels[0].name : "don't have label"}</h3>
         </div>
-        {content?.user.login == username &&
+        {username == content?.user.login || username == "LeeChasel" &&
             <div>
-                {/* <UpdateIssueUI token={token} data={content!}/> */}
+                <UpdateIssueUI token={token} data={content!} username={username}/>
                 <DeleteIssueUI token={token} issue_number={issue_number}/>
             </div>
         }       
@@ -73,33 +76,26 @@ function IssueComments()
     const [comments, setComments] = useState<FormComment[]>([]);
     useEffect(() => {
         getComments(token, issue_number).then(res => setComments(res));
-        const interval = setInterval(() => {
-            getComments(token, issue_number).then(res => setComments(res));
-        }, 4000);
-        return () => clearInterval(interval)
+        // const interval = setInterval(() => {
+        //     getComments(token, issue_number).then(res => setComments(res));
+        // }, 4000);
+        // return () => clearInterval(interval)
     }, [])
     return (
         <>
         {comments.map( function(comment) {
-            let operateComment;
-            if (comment.user.login == username)
-            {
-                operateComment = 
-                    <div className="">
-                    <UpdateCommentUI token={token} id={comment.id} text={comment.body}/>
-                    <DeleteCommentUI token={token} id={comment.id}/>
-                    </div>
-            } else {
-                operateComment = <div></div>
-            }
-
             return (
             <div key={comment.body}>
                 <br/>
                 <div className="bg-yellow-300 p-2">
                     <h2 className="text-blue-500">{comment.user.login}</h2>
                     <pre>{comment.body}</pre>
-                    {operateComment}
+                    {comment.user.login == username &&
+                     <div>
+                        <UpdateCommentUI token={token} id={comment.id} text={comment.body}/>
+                        <DeleteCommentUI token={token} id={comment.id}/>
+                    </div>
+                    }
                 </div>
             </div>
         )})}

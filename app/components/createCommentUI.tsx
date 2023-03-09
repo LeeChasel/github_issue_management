@@ -8,11 +8,9 @@ export default function CreateCommentUI({issue_number, token}:{issue_number:stri
     
     function handleSubmit(e:any)
     {
-        e.preventDefault();
         const formData = new FormData(e.target);
         const formJson = Object.fromEntries(formData.entries());
         createComment(formJson, issue_number, token);
-        setIsopen(false);
     }
 
     if (!isopen) return <button onClick={() => setIsopen(true)}>write comment</button>

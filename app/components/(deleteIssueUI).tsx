@@ -14,8 +14,7 @@ export default function DeleteIssueUI({token, issue_number}:{token:string, issue
         if (alert)
         {
             deleteIssue(token, issue_number);
-            router.refresh();
-            setIsopen(false)
+            router.back();
         }
     }
 

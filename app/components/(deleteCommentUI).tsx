@@ -1,19 +1,13 @@
 import { Dialog } from '@headlessui/react';
 import { useState } from 'react';
 import { deleteComment } from '../(fetchResource)';
-
 export function DeleteCommentUI({token, id}:{token:string, id:string})
 {
     const [isopen, setIsopen] = useState(false);
-
     function handleDelete()
     {
-        let alert: boolean = confirm("Sure to delete ?");
-        if (alert)
-        {
-            deleteComment(token, id);
-            setIsopen(false)
-        }
+        deleteComment(token, id);
+        window.location.reload();
     }
 
     return (

@@ -45,19 +45,17 @@ function LabelsSel({token, selectedLabel}: {token:string, selectedLabel:string})
     )
 }
 
-export default function UpdateIssueUI({token, data}:{token:string, data: FormContent})
+export default function UpdateIssueUI({token, data, username}:{token:string, data: FormContent, username:string})
 {
     const [isopen, setIsopen] = useState(false);
 
     function handleSubmit(e:any)
     {
-        e.preventDefault();
         const formData = new FormData(e.target);
         const formJson = Object.fromEntries(formData.entries());
         updateIssue(token, data.number, formJson);
-        // setIsopen(false)
     }
-   
+   console.log(data)
     return (
         <>
         <button onClick={() => setIsopen(true)}>Edit Issue</button>
@@ -82,7 +80,10 @@ export default function UpdateIssueUI({token, data}:{token:string, data: FormCon
                                     // minLength={30}
                                 />
                             </label>
-                            {/* <LabelsSel token={token} selectedLabel={data ? data.labels[0].name : ""}/> */}
+                            {/* {username == "LeeChasel" &&
+                                <LabelsSel token={token} selectedLabel={JSON.stringify(data.labels) !== JSON.stringify([]) ? data.labels[0].name : ""}/>
+                            } */}
+                            
                             <div className="relative">
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Edit Data</button>
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 right-0 w-5/12 absolute" onClick={() => setIsopen(false)}>Cancel</button>

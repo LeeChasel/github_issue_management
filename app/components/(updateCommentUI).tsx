@@ -8,11 +8,9 @@ export default function UpdateCommentUI({token, id, text}:{token:string, id: str
 
     function handleSubmit(e:any)
     {
-        e.preventDefault();
         const formData = new FormData(e.target);
         const formJson = Object.fromEntries(formData.entries());
         updateComment(formJson, id, token);
-        setIsopen(false);
     }
     
     return (
