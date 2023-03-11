@@ -2,16 +2,18 @@
 
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect} from "react"
-import { getIssueContent, getComments, getUsername } from "@/app/(fetchResource)";
+import { getIssueContent, getComments, getUsername, getLebelsInRepo } from "@/app/(fetchResource)";
 import CreateCommentUI from "@/app/components/createCommentUI";
 import UpdateCommentUI from "@/app/components/(updateCommentUI)";
 import UpdateIssueUI from "@/app/components/(updateIssueUI)";
 import { DeleteCommentUI } from "@/app/components/(deleteCommentUI)";
 import DeleteIssueUI from "@/app/components/(deleteIssueUI)";
+import UpdateLabelUI from "@/app/components/(updateLabelUI)";
 
 let issue_number = "";
 let token = "";
 let username = "";
+const owner = "LeeChasel";
 
 interface FormComment 
 {
@@ -45,7 +47,6 @@ function IssueContent()
     const [content, setContent] = useState<FormContent>()
     useEffect(() => {
         getIssueContent(token, issue_number).then(res => {
-            // console.log(res.labels)
             setContent(res);
         })
     }, []);
@@ -60,12 +61,15 @@ function IssueContent()
             <h3 className="text-blue-500">status: {content?.state}</h3>
             <h3 className="text-blue-500">label: {content?.labels.length ? content?.labels[0].name : "don't have label"}</h3>
         </div>
-        {username == content?.user.login || username == "LeeChasel" &&
+        {(username == content?.user.login || username == owner) &&
             <div>
-                <UpdateIssueUI token={token} data={content!} username={username}/>
+                <UpdateIssueUI token={token} data={content!}/>
                 <DeleteIssueUI token={token} issue_number={issue_number}/>
             </div>
-        }       
+        }
+        {username == owner && 
+            <UpdateLabelUI token={token} issue_number={issue_number}/>
+        }
         <br/>
         </div>
     )
@@ -83,14 +87,13 @@ function IssueComments()
     }, [])
     return (
         <>
-        {comments.map( function(comment) {
-            return (
+        {comments.map(comment => (
             <div key={comment.body}>
                 <br/>
                 <div className="bg-yellow-300 p-2">
                     <h2 className="text-blue-500">{comment.user.login}</h2>
                     <pre>{comment.body}</pre>
-                    {comment.user.login == username &&
+                    {(username == comment.user.login || username == owner) &&
                      <div>
                         <UpdateCommentUI token={token} id={comment.id} text={comment.body}/>
                         <DeleteCommentUI token={token} id={comment.id}/>
@@ -98,7 +101,7 @@ function IssueComments()
                     }
                 </div>
             </div>
-        )})}
+        ))}
         </>
     )
 }

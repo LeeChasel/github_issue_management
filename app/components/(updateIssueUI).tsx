@@ -45,7 +45,7 @@ function LabelsSel({token, selectedLabel}: {token:string, selectedLabel:string})
     )
 }
 
-export default function UpdateIssueUI({token, data, username}:{token:string, data: FormContent, username:string})
+export default function UpdateIssueUI({token, data}:{token:string, data: FormContent})
 {
     const [isopen, setIsopen] = useState(false);
 
@@ -55,7 +55,6 @@ export default function UpdateIssueUI({token, data, username}:{token:string, dat
         const formJson = Object.fromEntries(formData.entries());
         updateIssue(token, data.number, formJson);
     }
-   console.log(data)
     return (
         <>
         <button onClick={() => setIsopen(true)}>Edit Issue</button>

@@ -43,7 +43,8 @@ export function getIssueContent(token:string, issue_number:string): Promise<Form
         headers: {
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
-        }
+        },
+        cache: "no-cache",
     }).then(res => res.json())
 }
 
@@ -54,7 +55,7 @@ export function getComments(token:string, issue_number:string): Promise<FormComm
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
         },
-        cache: "no-cache"
+        cache: "no-cache",
     }).then(res => res.json())
 }
 
@@ -105,7 +106,7 @@ export function getLebelsInRepo(token:string)
 
 export function createIssue(token:string, data:any)
 {
-    data.labels = ["Open"];
+    if (data.labels = "None") delete data.labels
     fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues`, {
         headers: {
             "Accept" : "application/vnd.github+json",
@@ -153,4 +154,22 @@ export function getIssuesWithSearchstring(token:string, page:number, label:strin
         },
         cache: "no-cache",
     }).then(res => res.json()).then(json => json.items).catch(err => console.log(err));   
+}
+
+export function setLabel(token:string, issue_number:string, data:any)
+{
+    if (data.labels == "None")
+    {
+        data.labels = [];
+    } else {
+        data.labels = [data.labels];
+    }
+    fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issue_number}/labels`,{
+        headers: {
+            "Accept" : "application/vnd.github+json",
+            "Authorization" : `Bearer ${token}`,
+        },
+        method: "PUT",
+        body: JSON.stringify(data),
+    }).catch(err => console.log(err));
 }

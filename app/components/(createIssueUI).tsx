@@ -1,8 +1,9 @@
 import { Dialog } from '@headlessui/react';
 import { useState, useEffect } from 'react';
-import { getLebelsInRepo, createIssue } from '../(fetchResource)';
-import { useRouter } from 'next/navigation';
+import { getLebelsInRepo, createIssue, getUsername } from '../(fetchResource)';
+import CreateLabelUI from './(createLabelUI)';
 
+const owner = "LeeChasel"
 interface Labels
 {
     color: string;
@@ -14,7 +15,8 @@ export default function CreateIssueUI({token}:{token:string})
 {
     const [isopen, setIsopen] = useState(false);
     const [data, setData] = useState<Labels[]>([]);
-    const router = useRouter()
+    const [username, setUsername] = useState("");
+
     useEffect(() => {
         getLebelsInRepo(token).then(res => {
             let newRes: Labels[] = res.map((item:any) => {
@@ -22,12 +24,14 @@ export default function CreateIssueUI({token}:{token:string})
             })
             setData([...data, ...newRes]);
         });
+        getUsername(token).then(res => setUsername(res));
     }, [])
 
     function handleSubmit(e:any)
     {
         const formData = new FormData(e.target);
         const formJson = Object.fromEntries(formData.entries());
+        if (!formData.has("labels")) formJson.labels = "None";
         createIssue(token, formJson);
     }
 
@@ -54,6 +58,7 @@ export default function CreateIssueUI({token}:{token:string})
                                     minLength={30}
                                 />
                             </label>
+                            {username == owner && <CreateLabelUI token={token}/>}
                             <div className="relative">
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Create New Issue</button>
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 right-0 w-5/12 absolute" onClick={() => setIsopen(false)}>Cancel</button>
