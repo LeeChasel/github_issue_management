@@ -28,20 +28,22 @@ interface Labels
 function GetDataUseInfiniteScroll({selectedLabel, searchString}:{selectedLabel:string, searchString:string})
 {
     const [items, setItems] = useState<FormData[]>([]);
-    const [hasMore, setHasMore] = useState<boolean>(true)
-    const [page,  setPage] = useState<number>(1)
-    
-    useEffect(() => {
-        setPage(1)
-        getIssuesWithSearchstring(token, 1, selectedLabel, searchString).then(res => {
-            setItems(res);
-            setHasMore(res.length > 0)
-        })
-    }, [selectedLabel, searchString])
+    const [hasMore, setHasMore] = useState<boolean>(true);
+    const [page,  setPage] = useState<number>(1);
+    const [sortByOld, SetSortByOld] = useState(false);
+
+    useEffect(() => {        
+            setPage(1);
+            getIssuesWithSearchstring(token, 1, selectedLabel, sortByOld, searchString).then(res => {
+                setItems(res);
+                setHasMore(res.length > 0);
+            })
+          
+    }, [selectedLabel, searchString, sortByOld])
 
     function fetchMoreData()
     {
-        getIssuesWithSearchstring(token, page + 1, selectedLabel, searchString).then(res => {
+        getIssuesWithSearchstring(token, page + 1, selectedLabel, sortByOld, searchString).then(res => {
             setItems([...items, ...res]);
             setHasMore(res.length > 0);
             setPage(page + 1);
@@ -49,9 +51,7 @@ function GetDataUseInfiniteScroll({selectedLabel, searchString}:{selectedLabel:s
     };
 
     function SortToggle()
-    {
-        const [sortByOld, SetSortByOld] = useState(false)
-        
+    {   
         return (
             <div className="py-2">
                 <span>new to old</span>
@@ -84,16 +84,14 @@ function GetDataUseInfiniteScroll({selectedLabel, searchString}:{selectedLabel:s
             loader={<h4>Loading...</h4>}
             height={200}
             >
-                {items.length ? items.map((item:FormData) => {
-                    return (
+                {items.length ? items.map((item:FormData) => (
                     <div key={item.number} className="h-7 m-1 p-1 border-2 border-solid border-green-400">
                         <Link href={`/AfterLogin/issues/${item.number}?access_token=${token}`}>
                             <span>#{item.number}  _</span>
                         </Link>
                         <span>{item.title} - {item.labels.map(i => {return i.name})}</span>
                     </div>
-                    )
-                }) : <p>Don't have data</p>}
+                )) : <p>Don't have data</p>}
             </InfiniteScroll>
         </div>
         </>

@@ -143,17 +143,18 @@ export function deleteIssue(token:string, issue_number:string)
     }).catch(err => console.log(err));
 }
 
-export function getIssuesWithSearchstring(token:string, page:number, label:string, searchstring:string)
+export function getIssuesWithSearchstring(token:string, page:number, label:string, sortByOld:boolean, searchstring:string)
 {
-    const pageSize = 10;
+    let pageSize = 10;
+    let order = sortByOld ? "asc" : "desc";
     let queryString = 'q=' + encodeURIComponent(`${searchstring} repo:${OWNER}/${REPO} type:issue in:title,body,comments state:open ${label == "All" ? "" : `label:${label}`}`)
-    return fetch(`https://api.github.com/search/issues?per_page=${pageSize}&page=${page}&${queryString}`, {
+    return fetch(`https://api.github.com/search/issues?per_page=${pageSize}&page=${page}&sort=created&order=${order}&${queryString}`, {
         headers: {
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
         },
         cache: "no-cache",
-    }).then(res => res.json()).then(json => json.items).catch(err => console.log(err));   
+    }).then(res => res.json()).then(json => json.items).catch(err => console.log(err));
 }
 
 export function setLabel(token:string, issue_number:string, data:any)
