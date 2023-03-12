@@ -1,6 +1,5 @@
-import { useState, useEffect, useLayoutEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { getLebelsInRepo, setLabel } from "@/app/(fetchResource)";
-
 
 interface Labels
 {
@@ -19,7 +18,7 @@ export default function UpdateLabelUI({token, issue_number}:{token:string, issue
             })
             setLabels([...labels, ...newRes]);
         });
-    }, [])
+    }, []);
 
     function handleChange(e:string)
     {
@@ -42,5 +41,4 @@ export default function UpdateLabelUI({token, issue_number}:{token:string, issue
         </label>
         </>
     )
-
 }

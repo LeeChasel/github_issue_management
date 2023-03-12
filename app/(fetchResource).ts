@@ -114,12 +114,11 @@ export function createIssue(token:string, data:any)
         },
         method: "POST",
         body: JSON.stringify(data),
-    }).then(res => res.json()).catch(err => console.log(err))
+    }).catch(err => console.log(err))
 }
 
 export function updateIssue(token:string, issue_number:number, data:any)
 {
-    // data.labels = [data.labels]
     fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issue_number}`, {
         headers: {
             "Accept" : "application/vnd.github+json",
@@ -127,7 +126,7 @@ export function updateIssue(token:string, issue_number:number, data:any)
         },
         method: "PATCH",
         body: JSON.stringify(data),
-    }).then(res => res.json()).catch(err => console.log(err));
+    }).catch(err => console.log(err));
 }
 
 export function deleteIssue(token:string, issue_number:string)
@@ -159,12 +158,7 @@ export function getIssuesWithSearchstring(token:string, page:number, label:strin
 
 export function setLabel(token:string, issue_number:string, data:any)
 {
-    if (data.labels == "None")
-    {
-        data.labels = [];
-    } else {
-        data.labels = [data.labels];
-    }
+    data.labels = (data.labels == "None") ? [] : [data.labels]
     fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issue_number}/labels`,{
         headers: {
             "Accept" : "application/vnd.github+json",

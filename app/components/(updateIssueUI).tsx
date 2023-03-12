@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Dialog } from '@headlessui/react';
 import { updateIssue, getLebelsInRepo } from "../(fetchResource)";
 
@@ -15,34 +15,6 @@ interface Labels
     color: string;
     id: number;
     name: string;
-}
-
-function LabelsSel({token, selectedLabel}: {token:string, selectedLabel:string})
-{
-    const [labels, setLabels] = useState<Labels[]>([])
-    useEffect(() => {
-        getLebelsInRepo(token).then(res => {
-            let newRes: Labels[] = res.map((item:any) => {
-                return {color: item.color, id: item.id, name: item.name};
-            })
-            setLabels([...labels, ...newRes]);
-        });
-    }, [])
-
-    // use this way to set default option would cause err, but still working. change to react select package later.
-    return (
-        <>
-        <label>
-            <span>choose label : </span>
-            <select name="labels">
-                {labels.map(label => {
-                    if (label.name == selectedLabel) return <option key={label.id} selected value={label.name}>{label.name}</option>
-                    return <option key={label.id} value={label.name}>{label.name}</option>
-                })}
-            </select>
-        </label>
-        </>
-    )
 }
 
 export default function UpdateIssueUI({token, data}:{token:string, data: FormContent})
@@ -76,13 +48,9 @@ export default function UpdateIssueUI({token, data}:{token:string, data: FormCon
                                     cols={40}
                                     defaultValue={data ? data.body : ""}
                                     required
-                                    // minLength={30}
+                                    minLength={30}
                                 />
-                            </label>
-                            {/* {username == "LeeChasel" &&
-                                <LabelsSel token={token} selectedLabel={JSON.stringify(data.labels) !== JSON.stringify([]) ? data.labels[0].name : ""}/>
-                            } */}
-                            
+                            </label>                            
                             <div className="relative">
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Edit Data</button>
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 right-0 w-5/12 absolute" onClick={() => setIsopen(false)}>Cancel</button>
@@ -94,5 +62,4 @@ export default function UpdateIssueUI({token, data}:{token:string, data: FormCon
         </Dialog>
         </>
     )
-
 }

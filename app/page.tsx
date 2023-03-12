@@ -1,66 +1,59 @@
 'use client'
 import {useRouter} from 'next/navigation';
 
+const cliend_id = "a72341c3b401536e1dea";
+const scope = "repo%20user"; 
+
 function login(router: any)
 {
   let windowWidth : number = 500;
   let windowHeight : number = 700;
-  let cliend_id = "a72341c3b401536e1dea";
-  let scope = "repo%20user";
   const y = window.top!.outerHeight / 2 + window.top!.screenY - (windowHeight / 2);
   const x = window.top!.outerWidth / 2 + window.top!.screenX - (windowWidth / 2);
-  let popup = window.open(`https://github.com/login/oauth/authorize?client_id=${cliend_id}&scope=${scope}`,"", `top=${y}, left=${x}, width=${windowWidth}, height=${windowHeight}`);
-  var timer = setInterval(() => checkWindow(router), 1000);
-  
-  function checkWindow(router: any): void
-  {
-    try{
-      let query = popup!.location.search;
-      if (query?.indexOf("code") != -1)
-      {
-        clearInterval(timer);
-        let code = processQuery(query);        
-        sleep(3000).then(() => popup?.close())
-                   .then(() => sleep(500))
-                   .then(() => getToken(code))
-                   .then(token => toAfterLogin(token, router));
-      }
-    } catch (e) {
-      console.log(e);
-    }
+  let popup = window.open(`https://github.com/login/oauth/authorize?client_id=${cliend_id}&scope=${scope}`,"", `top=${y}, left=${x}, width=${windowWidth}, height=${windowHeight}`)!;
+  listenPopup();
 
-    function sleep(ms:number) {
+  function listenPopup()
+  {
+    try {
+      if (popup.location.pathname == "/authorizeRes" && popup.location.hostname == "localhost")
+      {
+        let urlParams = new URLSearchParams(popup.location.search);
+        if (!urlParams.has("code"))
+        {
+          window.alert("Don't have code in popup window url");
+          return;
+        }
+        processToken(urlParams.get("code")!, router)
+      } else {
+        setTimeout(listenPopup, 2000);
+      }
+    } catch (err) {
+      // To handle CORS
+    }
+  }
+
+  async function processToken(code:string, router:any) {
+    await wait(1000);
+    popup.close();
+    const token = await getToken(code);
+    await wait(500);
+    router.push("AfterLogin?access_token=" + token);    
+  }
+
+    function wait(ms:number) 
+    {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    function processQuery(query: string): string
+    function getToken(code: string)
     {
-      query = query.substring(1);
-      let parameters = query.split("&");
-      for (let parameter of parameters)
-      {
-        if (parameter.includes("code"))
-        {
-          return parameter;
-        }
-      }
-      return "Not found";
+      return fetch("api/getToken?code=" + code).then(res => res.json()).then(json => json.access_token);
     }
-
-    async function getToken(code: string)
-    {
-      let token = await fetch("api/getToken?" + code).then(res => res.json());
-      return token;
-    }
-
-    function toAfterLogin(token: string, router: any)
-    {
-      router.push("AfterLogin?access_token=" + token)
-    }
-  } 
 }
 
-export default function Home() {
+export default function Home() 
+{
   const router = useRouter();
   return (
     <main>
@@ -68,4 +61,3 @@ export default function Home() {
     </main>
   )
 }
-

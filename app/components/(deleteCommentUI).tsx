@@ -1,7 +1,8 @@
 import { Dialog } from '@headlessui/react';
 import { useState } from 'react';
 import { deleteComment } from '../(fetchResource)';
-export function DeleteCommentUI({token, id}:{token:string, id:string})
+
+export default function DeleteCommentUI({token, id}:{token:string, id:string})
 {
     const [isopen, setIsopen] = useState(false);
     function handleDelete()

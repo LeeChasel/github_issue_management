@@ -25,21 +25,20 @@ interface Labels
     name: string;
 }
 
-function GetDataUseInfiniteScroll({selectedLabel, searchString}:{selectedLabel:string, searchString:string})
+function DataList({selectedLabel, searchString}:{selectedLabel:string, searchString:string})
 {
     const [items, setItems] = useState<FormData[]>([]);
-    const [hasMore, setHasMore] = useState<boolean>(true);
-    const [page,  setPage] = useState<number>(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [page,  setPage] = useState(1);
     const [sortByOld, SetSortByOld] = useState(false);
 
-    useEffect(() => {        
-            setPage(1);
-            getIssuesWithSearchstring(token, 1, selectedLabel, sortByOld, searchString).then(res => {
-                setItems(res);
-                setHasMore(res.length > 0);
-            })
-          
-    }, [selectedLabel, searchString, sortByOld])
+    useEffect(() => {
+        setPage(1);
+        getIssuesWithSearchstring(token, 1, selectedLabel, sortByOld, searchString).then(res => {
+            setItems(res);
+            setHasMore(res.length > 0);
+        })
+    }, [selectedLabel, searchString, sortByOld]);
 
     function fetchMoreData()
     {
@@ -76,7 +75,6 @@ function GetDataUseInfiniteScroll({selectedLabel, searchString}:{selectedLabel:s
         <>
         <SortToggle />
         <div>
-            <br/>
             <InfiniteScroll
             dataLength={items.length}
             next={fetchMoreData}
@@ -89,7 +87,7 @@ function GetDataUseInfiniteScroll({selectedLabel, searchString}:{selectedLabel:s
                         <Link href={`/AfterLogin/issues/${item.number}?access_token=${token}`}>
                             <span>#{item.number}  _</span>
                         </Link>
-                        <span>{item.title} - {item.labels.map(i => {return i.name})}</span>
+                        <span>{item.title} - {item.labels.length ? item.labels[0].name : "None label"}</span>
                     </div>
                 )) : <p>Don't have data</p>}
             </InfiniteScroll>
@@ -108,7 +106,7 @@ function LabelsSel({setSelectedLabel}:{setSelectedLabel: any})
             })
             setData([...data, ...newRes]);
         });
-    }, [])
+    }, []);
 
     return (
         <>
@@ -146,7 +144,7 @@ function DisplayIssue()
         <>
             <SearchBox searchString={searchString} setSearchString={setSearchString}/>
             <LabelsSel setSelectedLabel={setSelectedLabel}/>
-            <GetDataUseInfiniteScroll selectedLabel={selectedLabel} searchString={searchString}/>
+            <DataList selectedLabel={selectedLabel} searchString={searchString}/>
         </>
     )
 }

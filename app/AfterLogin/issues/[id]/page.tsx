@@ -2,11 +2,11 @@
 
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect} from "react"
-import { getIssueContent, getComments, getUsername, getLebelsInRepo } from "@/app/(fetchResource)";
-import CreateCommentUI from "@/app/components/createCommentUI";
+import { getIssueContent, getComments, getUsername } from "@/app/(fetchResource)";
+import CreateCommentUI from "@/app/components/(createCommentUI)";
 import UpdateCommentUI from "@/app/components/(updateCommentUI)";
 import UpdateIssueUI from "@/app/components/(updateIssueUI)";
-import { DeleteCommentUI } from "@/app/components/(deleteCommentUI)";
+import DeleteCommentUI from "@/app/components/(deleteCommentUI)";
 import DeleteIssueUI from "@/app/components/(deleteIssueUI)";
 import UpdateLabelUI from "@/app/components/(updateLabelUI)";
 
@@ -80,15 +80,11 @@ function IssueComments()
     const [comments, setComments] = useState<FormComment[]>([]);
     useEffect(() => {
         getComments(token, issue_number).then(res => setComments(res));
-        // const interval = setInterval(() => {
-        //     getComments(token, issue_number).then(res => setComments(res));
-        // }, 4000);
-        // return () => clearInterval(interval)
     }, [])
     return (
         <>
         {comments.map(comment => (
-            <div key={comment.body}>
+            <div key={comment.id}>
                 <br/>
                 <div className="bg-yellow-300 p-2">
                     <h2 className="text-blue-500">{comment.user.login}</h2>
