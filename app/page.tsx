@@ -55,7 +55,12 @@ export default function Home()
   const router = useRouter();
   return (
     <main>
-      <button onClick={() => login(router)}>Click to oauth</button>
+      {/* <button onClick={() => login(router)}>Click to oauth</button> */}
+       <p>url : {process.env.NEXT_PUBLIC_APP_URL}</p>
+       <p>id : {process.env.NEXT_PUBLIC_OAUTH_CLIENT_ID}</p>
+      <p> secrets: {process.env.NEXT_PUBLIC_OAUTH_CLIENT_SECRETS}</p>
+      <p>owner : {process.env.NEXT_PUBLIC_REPO_OWNER}</p>
+      <p>repo : {process.env.NEXT_PUBLIC_REPO_NAME} </p>
     </main>
   )
 }
