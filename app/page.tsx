@@ -36,7 +36,7 @@ function login(router: any)
     popup.close();
     const token = await getToken(code);
     await wait(500);
-    router.push("AfterLogin?access_token=" + token);    
+    router.push("AfterLogin?access_token=" + token);   
   }
 
     function wait(ms:number) 
@@ -55,12 +55,7 @@ export default function Home()
   const router = useRouter();
   return (
     <main>
-      {/* <button onClick={() => login(router)}>Click to oauth</button> */}
-       <p>url : {process.env.NEXT_PUBLIC_APP_URL}</p>
-       <p>id : {process.env.NEXT_PUBLIC_OAUTH_CLIENT_ID}</p>
-      <p> secrets: {process.env.NEXT_PUBLIC_OAUTH_CLIENT_SECRETS}</p>
-      <p>owner : {process.env.NEXT_PUBLIC_REPO_OWNER}</p>
-      <p>repo : {process.env.NEXT_PUBLIC_REPO_NAME} </p>
+      <button onClick={() => login(router)}>Click to oauth</button>
     </main>
   )
 }
