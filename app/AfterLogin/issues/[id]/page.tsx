@@ -13,7 +13,6 @@ import UpdateLabelUI from "@/app/components/(updateLabelUI)";
 let issue_number = "";
 let token = "";
 let username = "";
-const owner = "LeeChasel";
 
 interface FormComment 
 {
@@ -61,13 +60,13 @@ function IssueContent()
             <h3 className="text-blue-500">status: {content?.state}</h3>
             <h3 className="text-blue-500">label: {content?.labels.length ? content?.labels[0].name : "don't have label"}</h3>
         </div>
-        {(username == content?.user.login || username == owner) &&
+        {(username == content?.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
             <div>
                 <UpdateIssueUI token={token} data={content!}/>
                 <DeleteIssueUI token={token} issue_number={issue_number}/>
             </div>
         }
-        {username == owner && 
+        {username == process.env.NEXT_PUBLIC_REPO_OWNER && 
             <UpdateLabelUI token={token} issue_number={issue_number}/>
         }
         <br/>
@@ -89,7 +88,7 @@ function IssueComments()
                 <div className="bg-yellow-300 p-2">
                     <h2 className="text-blue-500">{comment.user.login}</h2>
                     <pre>{comment.body}</pre>
-                    {(username == comment.user.login || username == owner) &&
+                    {(username == comment.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
                      <div>
                         <UpdateCommentUI token={token} id={comment.id} text={comment.body}/>
                         <DeleteCommentUI token={token} id={comment.id}/>

@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { getLebelsInRepo, createIssue, getUsername } from '../(fetchResource)';
 import CreateLabelUI from './(createLabelUI)';
 
-const owner = "LeeChasel"
 interface Labels
 {
     color: string;
@@ -58,7 +57,7 @@ export default function CreateIssueUI({token}:{token:string})
                                     minLength={30}
                                 />
                             </label>
-                            {username == owner && <CreateLabelUI token={token}/>}
+                            {username == process.env.NEXT_PUBLIC_REPO_OWNER && <CreateLabelUI token={token}/>}
                             <div className="relative">
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Create New Issue</button>
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 right-0 w-5/12 absolute" onClick={() => setIsopen(false)}>Cancel</button>

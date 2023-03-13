@@ -1,7 +1,6 @@
 'use client'
 import {useRouter} from 'next/navigation';
 
-const cliend_id = "a72341c3b401536e1dea";
 const scope = "repo%20user"; 
 
 function login(router: any)
@@ -10,13 +9,12 @@ function login(router: any)
   let windowHeight : number = 700;
   const y = window.top!.outerHeight / 2 + window.top!.screenY - (windowHeight / 2);
   const x = window.top!.outerWidth / 2 + window.top!.screenX - (windowWidth / 2);
-  let popup = window.open(`https://github.com/login/oauth/authorize?client_id=${cliend_id}&scope=${scope}`,"", `top=${y}, left=${x}, width=${windowWidth}, height=${windowHeight}`)!;
+  let popup = window.open(`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_OAUTH_CLIENT_ID}&scope=${scope}`,"", `top=${y}, left=${x}, width=${windowWidth}, height=${windowHeight}`)!;
   listenPopup();
-
   function listenPopup()
   {
     try {
-      if (popup.location.pathname == "/authorizeRes" && popup.location.hostname == "localhost")
+      if (popup.location.pathname == "/authorizeRes")
       {
         let urlParams = new URLSearchParams(popup.location.search);
         if (!urlParams.has("code"))

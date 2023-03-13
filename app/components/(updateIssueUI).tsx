@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dialog } from '@headlessui/react';
-import { updateIssue, getLebelsInRepo } from "../(fetchResource)";
+import { updateIssue } from "../(fetchResource)";
 
 interface FormContent
 {

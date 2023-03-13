@@ -6,7 +6,7 @@ export default function handler(
 ) {
     if (req.method === 'GET' && req.query.code != null)
     {
-        res.redirect(301, "http://localhost:3000/authorizeRes?code=" + req.query.code)
+        res.redirect(301, `${process.env.APP_URL}/authorizeRes?code=` + req.query.code);
     } else {
         res.status(200).json("You don't have code in url");
     }

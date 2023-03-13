@@ -1,5 +1,5 @@
-const OWNER = "LeeChasel";
-let REPO = "dcard_intern_homework";
+const OWNER = process.env.NEXT_PUBLIC_REPO_OWNER;
+let REPO = process.env.NEXT_PUBLIC_REPO_NAME;
 
 interface FormContent
 {
