@@ -9,7 +9,7 @@ export default function handler(
         method: "POST",
         body: JSON.stringify({
             "client_id" : process.env.NEXT_PUBLIC_OAUTH_CLIENT_ID,
-            "client_secret" : process.env.OAUTH_CLIENT_SECRETS,
+            "client_secret" : process.env.NEXT_PUBLIC_OAUTH_CLIENT_SECRETS,
             "code" : code,
         }),
         headers: {
