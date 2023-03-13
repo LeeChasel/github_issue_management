@@ -28,14 +28,14 @@ function login(router: any)
       }
     } catch (err) {
       // To handle CORS
+      setTimeout(listenPopup, 2000);
     }
   }
 
   async function processToken(code:string, router:any) {
-    await wait(1000);
+    await wait(500);
     popup.close();
     const token = await getToken(code);
-    await wait(500);
     router.push("AfterLogin?access_token=" + token);   
   }
 
