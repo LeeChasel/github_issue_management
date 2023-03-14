@@ -31,9 +31,7 @@ export default function CreateIssueUI({token}:{token:string})
         e.preventDefault();
         const formData = new FormData(e.target);
         const formJson = Object.fromEntries(formData.entries());
-        if (!formData.has("labels")) formJson.labels = "None";
-        createIssue(token, formJson);
-        window.location.reload();
+        createIssue(token, formJson).then(() => window.location.reload());
     }
 
     return (
@@ -61,7 +59,7 @@ export default function CreateIssueUI({token}:{token:string})
                                 />
                             </label>
                             {username == process.env.NEXT_PUBLIC_REPO_OWNER && <CreateLabelUI token={token}/>}
-                            <div className="relative">
+                            <div className="relative" >
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Create New Issue</button>
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 right-0 w-5/12 absolute" onClick={() => setIsopen(false)}>Cancel</button>
                             </div>

@@ -25,8 +25,7 @@ export default function UpdateLabelUI({token, issue_number}:{token:string, issue
         const formData = new FormData();
         formData.append("labels", e)
         const formJson = Object.fromEntries(formData.entries());
-        setLabel(token, issue_number, formJson);
-        window.location.reload();
+        setLabel(token, issue_number, formJson).then(() => window.location.reload());
     }
     return (
         <>

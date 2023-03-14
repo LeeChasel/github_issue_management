@@ -59,7 +59,7 @@ export function getComments(token:string, issue_number:string): Promise<FormComm
     }).then(res => res.json())
 }
 
-export function createComment(comment:any, issue_number:string, token:string)
+export async function createComment(comment:any, issue_number:string, token:string)
 {
     fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issue_number}/comments`, {
         headers: {
@@ -71,9 +71,9 @@ export function createComment(comment:any, issue_number:string, token:string)
     }).catch(err => console.log(err));   
 }
 
-export function updateComment(comment:any, id:string, token:string)
+export async function updateComment(comment:any, id:string, token:string)
 {
-    fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/comments/${id}`, {
+    await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/comments/${id}`, {
         headers: {
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
@@ -83,7 +83,7 @@ export function updateComment(comment:any, id:string, token:string)
     }).catch(err => console.log(err));
 }
 
-export function deleteComment(token:string, id:string)
+export async function deleteComment(token:string, id:string)
 {
     fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/comments/${id}`, {
         headers: {
@@ -104,9 +104,14 @@ export function getLebelsInRepo(token:string)
     }).then(res => res.json()).catch(err => console.log(err));
 }
 
-export function createIssue(token:string, data:any)
+export async function createIssue(token:string, data:any)
 {
-    if (data.labels = "None") delete data.labels
+    if (data.labels == "None")
+    {
+        delete data.labels
+    } else {
+        data.labels = [data.labels]
+    }
     fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues`, {
         headers: {
             "Accept" : "application/vnd.github+json",
@@ -117,9 +122,9 @@ export function createIssue(token:string, data:any)
     }).catch(err => console.log(err))
 }
 
-export function updateIssue(token:string, issue_number:number, data:any)
+export async function updateIssue(token:string, issue_number:number, data:any)
 {
-    fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issue_number}`, {
+    await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issue_number}`, {
         headers: {
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
@@ -129,7 +134,7 @@ export function updateIssue(token:string, issue_number:number, data:any)
     }).catch(err => console.log(err));
 }
 
-export function deleteIssue(token:string, issue_number:string)
+export async function deleteIssue(token:string, issue_number:string)
 {
     let data = {state:"closed"};
     fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issue_number}`, {
@@ -156,7 +161,7 @@ export function getIssuesWithSearchstring(token:string, page:number, label:strin
     }).then(res => res.json()).then(json => json.items).catch(err => console.log(err));
 }
 
-export function setLabel(token:string, issue_number:string, data:any)
+export async function setLabel(token:string, issue_number:string, data:any)
 {
     data.labels = (data.labels == "None") ? [] : [data.labels]
     fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${issue_number}/labels`,{

@@ -7,14 +7,12 @@ export default function DeleteIssueUI({token, issue_number}:{token:string, issue
 {
     const [isopen, setIsopen] = useState(false);
     const router = useRouter();
-
     function handleDelete()
     {
         let alert: boolean = confirm("Sure to delete ?");
         if (alert)
         {
-            deleteIssue(token, issue_number);
-            router.back();
+            deleteIssue(token, issue_number).then(() => router.back())
         }
     }
 

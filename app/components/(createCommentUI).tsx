@@ -1,5 +1,5 @@
 import { Dialog } from '@headlessui/react';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { createComment } from '../(fetchResource)';
 
 export default function CreateCommentUI({issue_number, token}:{issue_number:string, token:string})
@@ -8,9 +8,10 @@ export default function CreateCommentUI({issue_number, token}:{issue_number:stri
     
     function handleSubmit(e:any)
     {
+        e.preventDefault();
         const formData = new FormData(e.target);
         const formJson = Object.fromEntries(formData.entries());
-        createComment(formJson, issue_number, token);
+        createComment(formJson, issue_number, token).then(() => window.location.reload());
     }
 
     if (!isopen) return <button onClick={() => setIsopen(true)}>write comment</button>

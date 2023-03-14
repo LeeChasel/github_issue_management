@@ -23,9 +23,10 @@ export default function UpdateIssueUI({token, data}:{token:string, data: FormCon
 
     function handleSubmit(e:any)
     {
+        e.preventDefault();
         const formData = new FormData(e.target);
         const formJson = Object.fromEntries(formData.entries());
-        updateIssue(token, data.number, formJson);
+        updateIssue(token, data.number, formJson).then(() => window.location.reload());
     }
     return (
         <>
@@ -41,7 +42,8 @@ export default function UpdateIssueUI({token, data}:{token:string, data: FormCon
                                 <input defaultValue={data ? data.title : ""} type="text" id="title" name="title" required className='indent-1 mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0'/>
                             </label>
                             <label>
-                                Edit your Issue Comment here : 
+                                <span className='mr-7'>Type your comment</span>
+                                <span>at least 30 letters</span>
                                 <textarea
                                     name='body'
                                     rows={4}

@@ -7,8 +7,7 @@ export default function DeleteCommentUI({token, id}:{token:string, id:string})
     const [isopen, setIsopen] = useState(false);
     function handleDelete()
     {
-        deleteComment(token, id);
-        window.location.reload();
+        deleteComment(token, id).then(() => window.location.reload());
     }
 
     return (
