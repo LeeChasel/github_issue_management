@@ -1,13 +1,11 @@
 'use client'
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateIssueUI from '../components/(createIssueUI)';
-import { getLebelsInRepo } from '../(fetchResource)';
-import { getIssuesWithSearchstring } from '../(fetchResource)';
+import { getLebelsInRepo, getIssuesWithSearchstring } from '../(fetchResource)';
 import { Switch } from '@headlessui/react'
-
 
 let token = "";
 
@@ -33,11 +31,19 @@ function DataList({selectedLabel, searchString}:{selectedLabel:string, searchStr
     const [sortByOld, SetSortByOld] = useState(false);
 
     useEffect(() => {
-        setPage(1);
+        let isCancelled = false;     
         getIssuesWithSearchstring(token, 1, selectedLabel, sortByOld, searchString).then(res => {
-            setItems(res);
-            setHasMore(res.length > 0);
+            if (!isCancelled)
+            {
+                setPage(1);
+                setItems(res);
+                setHasMore(res.length > 0);
+            }
         })
+
+        return () => {
+            isCancelled=true;
+        }
     }, [selectedLabel, searchString, sortByOld]);
 
     function fetchMoreData()
@@ -45,7 +51,7 @@ function DataList({selectedLabel, searchString}:{selectedLabel:string, searchStr
         getIssuesWithSearchstring(token, page + 1, selectedLabel, sortByOld, searchString).then(res => {
             setItems([...items, ...res]);
             setHasMore(res.length > 0);
-            setPage(page + 1);
+            setPage(prev => prev + 1);
         });
     };
 
