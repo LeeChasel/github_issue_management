@@ -28,10 +28,12 @@ export default function CreateIssueUI({token}:{token:string})
 
     function handleSubmit(e:any)
     {
+        e.preventDefault();
         const formData = new FormData(e.target);
         const formJson = Object.fromEntries(formData.entries());
         if (!formData.has("labels")) formJson.labels = "None";
         createIssue(token, formJson);
+        window.location.reload();
     }
 
     return (
@@ -42,13 +44,14 @@ export default function CreateIssueUI({token}:{token:string})
                 <Dialog.Panel className="w-1/3 rounded bg-sky-300 py-12 px-7">
                     <Dialog.Title className="text-2xl font-bold text-center">Enter your Issue</Dialog.Title>
                     <div className="mt-8 max-w-md">
-                        <form method='post' onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
+                        <form method="POST" onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
                             <label className='block'>
                                 <span>Title</span>
                                 <input type="text" id="title" name="title" required  className='indent-1 mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0'/>
                             </label>
                             <label className='block'>
-                                <span>Type your comment</span>
+                                <span className='mr-7'>Type your comment</span>
+                                <span>at least 30 letters</span>
                                 <textarea
                                     name='body'
                                     rows={4}
