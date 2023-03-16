@@ -8,8 +8,11 @@ module.exports = {
     // Or if using `src` directory:
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  theme: {
-    extend: {},
+  // theme: {
+  //   extend: {},
+  // },
+  daisyui: {
+    themes: ["bumblebee"],
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 }

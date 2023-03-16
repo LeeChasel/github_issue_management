@@ -1,7 +1,7 @@
 'use client'
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, FormEvent } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateIssueUI from '../components/(createIssueUI)';
 import { getLebelsInRepo, getIssuesWithSearchstring } from '../(fetchResource)';
@@ -128,17 +128,23 @@ function LabelsSel({setSelectedLabel}:{setSelectedLabel: any})
 
 function SearchBox({searchString, setSearchString}:{searchString:string, setSearchString:any})
 {
-    function handleSubmit(e:any)
+    function handleSubmit(e:FormEvent<HTMLFormElement>)
     {
         e.preventDefault();
-        setSearchString(e.target.search.value);
+        setSearchString(e.currentTarget.search.value);
     }
     return (
-        <form method='POST' onSubmit={handleSubmit}>
-        <label>Seach : </label>
-        <input defaultValue={searchString} className="bg-gray-200" type="text" name='search'/>
-        <button type='submit'>Search</button>
-        </form>
+        <div className="form-control mt-5">
+            <div className="input-group justify-center">
+                <form method='POST' onSubmit={handleSubmit}>
+                    <input type="text" name='search' defaultValue={searchString} className="input input-bordered" />
+                    <button className="btn btn-square" type='submit'>
+                        {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg> */}
+                        Click
+                    </button>
+                </form>
+            </div>
+        </div>
     )
 }
 
