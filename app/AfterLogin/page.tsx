@@ -1,11 +1,12 @@
 'use client'
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useState, useEffect, useRef, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateIssueUI from '../components/(createIssueUI)';
 import { getLebelsInRepo, getIssuesWithSearchstring } from '../(fetchResource)';
-import { Switch } from '@headlessui/react'
+import { CgSearch } from 'react-icons/cg'
+import { TbArrowsSort } from 'react-icons/tb'
 
 let token = "";
 
@@ -23,12 +24,11 @@ interface Labels
     name: string;
 }
 
-function DataList({selectedLabel, searchString}:{selectedLabel:string, searchString:string})
+function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string, searchString:string, sortByOld:boolean})
 {
     const [items, setItems] = useState<FormData[]>([]);
     const [hasMore, setHasMore] = useState(true);
     const [page,  setPage] = useState(1);
-    const [sortByOld, SetSortByOld] = useState(false);
 
     useEffect(() => {
         let isCancelled = false;     
@@ -55,37 +55,14 @@ function DataList({selectedLabel, searchString}:{selectedLabel:string, searchStr
         });
     };
 
-    function SortToggle()
-    {   
-        return (
-            <div className="py-2">
-                <span>new to old</span>
-                <Switch
-                    checked={sortByOld}
-                    onChange={SetSortByOld}
-                    className={`${sortByOld ? 'bg-teal-900' : 'bg-teal-700'}
-                    relative inline-flex h-[38px] w-[74px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
-                >
-                    <span
-                    aria-hidden="true"
-                    className={`${sortByOld ? 'translate-x-9' : 'translate-x-0'}
-                        pointer-events-none inline-block h-[34px] w-[34px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
-                    />
-                </Switch>
-                <span>old to new</span>
-            </div>
-        )
-    }
-
     return (
-        <>
-        <SortToggle />
+        <div>
         <div>
             <InfiniteScroll
             dataLength={items.length}
             next={fetchMoreData}
             hasMore={hasMore}
-            loader={<h4>Loading...</h4>}
+            loader={<button className="btn btn-ghost loading">loading</button>}
             height={200}
             >
                 {items.length ? items.map((item:FormData) => (
@@ -98,7 +75,7 @@ function DataList({selectedLabel, searchString}:{selectedLabel:string, searchStr
                 )) : <p>Don't have data</p>}
             </InfiniteScroll>
         </div>
-        </>
+        </div>
     )
 }
 
@@ -115,14 +92,15 @@ function LabelsSel({setSelectedLabel}:{setSelectedLabel: any})
     }, []);
 
     return (
-        <>
+        <div className='basis-1/3'>
+            <h2 className='text-center' >Filter</h2>
         <select name="selectLabel" onChange={e => setSelectedLabel(e.target.value)}>
             {data.map(value => (
                 //補顏色 use value.color
                 <option key={value.id} value={value.name}>{value.name}</option>
             ))}
         </select>
-        </>
+        </div>
     )
 }
 
@@ -135,15 +113,12 @@ function SearchBox({searchString, setSearchString}:{searchString:string, setSear
     }
     return (
         <div className="form-control mt-5">
-            <div className="input-group justify-center">
-                <form method='POST' onSubmit={handleSubmit}>
-                    <input type="text" name='search' defaultValue={searchString} className="input input-bordered" />
-                    <button className="btn btn-square" type='submit'>
-                        {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg> */}
-                        Click
-                    </button>
-                </form>
-            </div>
+            <form className="input-group justify-center" method='POST' onSubmit={handleSubmit}>
+                <input type="text" name='search' placeholder='Search' defaultValue={searchString} className="input input-bordered" />
+                <button className="btn btn-square" type='submit'>
+                    <CgSearch className='w-5 h-5'/>
+                </button>
+             </form>
         </div>
     )
 }
@@ -152,11 +127,44 @@ function DisplayIssue()
 {
     const [selectedLabel, setSelectedLabel] = useState("All");
     const [searchString, setSearchString] = useState("");
+    const [sortByOld, setSortByOld] = useState(false);
     return (
         <>
             <SearchBox searchString={searchString} setSearchString={setSearchString}/>
-            <LabelsSel setSelectedLabel={setSelectedLabel}/>
-            <DataList selectedLabel={selectedLabel} searchString={searchString}/>
+            <div className="divider" />
+            <div className='flex flex-row w-screen'>
+                <div className='flex flex-col basis-1/5 bg-blue-200'>
+                    <h3 className='basis-1/3'>Welcome, name</h3>
+                    <div className="divider" />
+                    <LabelsSel setSelectedLabel={setSelectedLabel}/>
+                    <div className="divider" />
+                    <div className='basis-1/3'>
+                        <h2>Sort</h2>
+                        <div className='flex flex-row'>
+                            <TbArrowsSort className="items-center"/>
+                            <div className='flex flex-col'>
+                            <div className="form-control">
+                                <label className="label cursor-pointer">
+                                    <span className="label-text">Newest To Oldest</span> 
+                                    <input type="checkbox"  className="checkbox" />
+                                </label>
+                            </div>
+                            <div className="form-control">
+                                <label className="label cursor-pointer">
+                                    <span className="label-text">Oldest To Newest</span> 
+                                    <input type="checkbox"  className="checkbox" />
+                                </label>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+                <div className='basis-4/5 bg-yellow-300'>
+                    <DataList selectedLabel={selectedLabel} searchString={searchString} sortByOld={sortByOld}/>
+                </div>
+            </div> 
         </>
     )
 }
@@ -168,7 +176,7 @@ export default function afterLogin()
     return (
         <main>
             <DisplayIssue />
-            <CreateIssueUI token={token}/>
+            {/* <CreateIssueUI token={token}/> */}
         </main>
     )
 }
