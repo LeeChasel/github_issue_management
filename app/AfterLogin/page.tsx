@@ -1,7 +1,7 @@
 'use client'
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateIssueUI from '../components/(createIssueUI)';
 import { getLebelsInRepo, getIssuesWithSearchstring } from '../(fetchResource)';
@@ -40,7 +40,6 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
                 setHasMore(res.length > 0);
             }
         })
-
         return () => {
             isCancelled=true;
         }
@@ -54,34 +53,54 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
             setPage(prev => prev + 1);
         });
     };
-
     return (
-        <div>
-        <div>
+        <>
+        <div className='w-full'>
             <InfiniteScroll
             dataLength={items.length}
             next={fetchMoreData}
             hasMore={hasMore}
-            loader={<button className="btn btn-ghost loading">loading</button>}
-            height={200}
+            loader={<button className="btn btn-ghost loading disabled">loading</button>}
+            height={400}
+            endMessage={<p>The end</p>}
+            className="w-full"
             >
-                {items.length ? items.map((item:FormData) => (
-                    <div key={item.number} className="h-7 m-1 p-1 border-2 border-solid border-green-400">
-                        <Link href={`/AfterLogin/issues/${item.number}?access_token=${token}`}>
-                            <span>#{item.number}  _</span>
-                        </Link>
-                        <span>{item.title} - {item.labels.length ? item.labels[0].name : "None label"}</span>
-                    </div>
-                )) : <p>Don't have data</p>}
+                <table className='table table-zebra w-full'>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Comment</th>
+                            <th>Author</th>
+                            <th>State</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {items && items.map((item:FormData) => (
+                            <tr key={item.number}>
+                                <th>
+                                    <Link href={`/AfterLogin/issues/${item.number}?access_token=${token}`}>
+                                        {item.number}
+                                    </Link>
+                                </th>
+                                <td>{item.title}</td>
+                                <td>{item.body}</td>
+                                <td>Author</td>
+                                <td>{item.labels.length ? item.labels[0].name : null}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </InfiniteScroll>
         </div>
-        </div>
+        </>
     )
 }
 
 function LabelsSel({setSelectedLabel}:{setSelectedLabel: any})
 {
     const [data, setData] = useState<Labels[]>([{color: "33FFE6", id: 0, name: "All"}]);
+    const [checkedLabel, setCheckedLabel] = useState("All");
     useEffect(() => {
         getLebelsInRepo(token).then(res => {
             let newRes: Labels[] = res.map((item:any) => {
@@ -91,15 +110,24 @@ function LabelsSel({setSelectedLabel}:{setSelectedLabel: any})
         });
     }, []);
 
+    function changeLabel(e:ChangeEvent<HTMLInputElement>)
+    {
+        setSelectedLabel(e.target.value);
+        setCheckedLabel(e.target.value);
+    }
+
     return (
         <div className='basis-1/3'>
-            <h2 className='text-center' >Filter</h2>
-        <select name="selectLabel" onChange={e => setSelectedLabel(e.target.value)}>
-            {data.map(value => (
-                //補顏色 use value.color
-                <option key={value.id} value={value.name}>{value.name}</option>
-            ))}
-        </select>
+            <h2 className='text-center'>Filter</h2>
+            <form className="form-control">
+                {data.map(value => (
+                    //補顏色
+                    <label key={value.id} className="label cursor-pointer">
+                        <span className="label-text">{value.name}</span> 
+                        <input type="radio" value={value.name} onChange={changeLabel} checked={checkedLabel === value.name} className="radio checked:bg-red-500" />
+                    </label>
+                ))}
+            </form>
         </div>
     )
 }
@@ -128,38 +156,34 @@ function DisplayIssue()
     const [selectedLabel, setSelectedLabel] = useState("All");
     const [searchString, setSearchString] = useState("");
     const [sortByOld, setSortByOld] = useState(false);
+
+    function handleSort(e:ChangeEvent<HTMLInputElement>)
+    {
+        setSortByOld(e.target.value === "oldest")
+    }
     return (
         <>
             <SearchBox searchString={searchString} setSearchString={setSearchString}/>
             <div className="divider" />
-            <div className='flex flex-row w-screen'>
+            <div className='flex flex-row w-full h-full'>
                 <div className='flex flex-col basis-1/5 bg-blue-200'>
-                    <h3 className='basis-1/3'>Welcome, name</h3>
+                    <h3 className='basis-1/3 text-center mt-2'>Welcome, name</h3>
                     <div className="divider" />
-                    <LabelsSel setSelectedLabel={setSelectedLabel}/>
+                    {/* <LabelsSel setSelectedLabel={setSelectedLabel}/> */}
                     <div className="divider" />
                     <div className='basis-1/3'>
-                        <h2>Sort</h2>
-                        <div className='flex flex-row'>
-                            <TbArrowsSort className="items-center"/>
-                            <div className='flex flex-col'>
-                            <div className="form-control">
-                                <label className="label cursor-pointer">
-                                    <span className="label-text">Newest To Oldest</span> 
-                                    <input type="checkbox"  className="checkbox" />
-                                </label>
-                            </div>
-                            <div className="form-control">
-                                <label className="label cursor-pointer">
-                                    <span className="label-text">Oldest To Newest</span> 
-                                    <input type="checkbox"  className="checkbox" />
-                                </label>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    
+                        <h2>Sort</h2>                        
+                        <form className="form-control">
+                            <label className="label cursor-pointer">
+                                <span className="label-text">Newest To Oldest</span> 
+                                <input type="radio" value="newest" onChange={handleSort} checked={!sortByOld} className="radio checked:bg-red-500" />
+                            </label>
+                            <label className="label cursor-pointer">
+                                <span className="label-text">Oldest To Newest</span> 
+                                <input type="radio" value="oldest" onChange={handleSort} checked={sortByOld} className="radio checked:bg-blue-500" />
+                            </label>
+                        </form>
+                    </div>                    
                 </div>
                 <div className='basis-4/5 bg-yellow-300'>
                     <DataList selectedLabel={selectedLabel} searchString={searchString} sortByOld={sortByOld}/>
@@ -174,7 +198,7 @@ export default function afterLogin()
     const searchParams = useSearchParams();
     token = searchParams.get("access_token")!;
     return (
-        <main>
+        <main className='max-w-full max-h-full'>
             <DisplayIssue />
             {/* <CreateIssueUI token={token}/> */}
         </main>
