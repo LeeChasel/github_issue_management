@@ -2,6 +2,7 @@ import { Dialog } from '@headlessui/react';
 import { useState, useEffect } from 'react';
 import { getLebelsInRepo, createIssue, getUsername } from '../(fetchResource)';
 import CreateLabelUI from './(createLabelUI)';
+import { IoIosAddCircleOutline } from 'react-icons/io'
 
 interface Labels
 {
@@ -36,7 +37,10 @@ export default function CreateIssueUI({token}:{token:string})
 
     return (
         <>
-        <button onClick={() => setIsopen(true)}>create Issue</button>
+        <button onClick={() => setIsopen(true)} className="btn gap-1 w-1/6 self-end mr-8 my-4">
+            <IoIosAddCircleOutline className='h-5 w-5'/>
+            Create Issue
+        </button>
         <Dialog open={isopen} onClose={() => setIsopen(false)} className="w-full relative z-50">
             <div className="fixed inset-0 flex items-center justify-center p-4 w-full">
                 <Dialog.Panel className="w-1/3 rounded bg-sky-300 py-12 px-7">
