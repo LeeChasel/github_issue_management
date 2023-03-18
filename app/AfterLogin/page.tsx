@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateIssueUI from '../components/(createIssueUI)';
 import { getLebelsInRepo, getIssuesWithSearchstring } from '../(fetchResource)';
 import { CgSearch } from 'react-icons/cg'
-import { TbArrowsSort } from 'react-icons/tb'
+import { BsInfoCircle } from 'react-icons/bs'
 
 let token = "";
 
@@ -53,19 +53,28 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
             setPage(prev => prev + 1);
         });
     };
+    const [table , setTable] = useState(450);
+    useEffect(() => {
+        setTable(document.getElementById("scrollableDiv")?.offsetHeight!)
+    }, [])
     return (
         <>
-        <div className=' bg-pink-400 overflow-y-auto' id='scrollableDiv'>
+        <div className='h-full max-h-full max-w-full grow bg-pink-400 overflow-auto' id='scrollableDiv'>
             <InfiniteScroll
             dataLength={items.length}
             next={fetchMoreData}
             hasMore={hasMore}
             loader={<button className="btn btn-ghost loading disabled">loading</button>}
-            // scrollableTarget="scrollableDiv"
-            height={400}
-            endMessage={<p>The end</p>}
-            // className="grow"
-            >
+            height={table}
+            endMessage={
+                <div className="alert alert-info shadow-lg justify-center">
+                    <div>
+                        <BsInfoCircle className='w-5 h-5'/>
+                        <span>No more data.</span>
+                    </div>
+                </div>
+            }
+            >   
                 <table className='table table-zebra w-full'>
                     <thead>
                         <tr>
@@ -112,7 +121,7 @@ function LabelsSel({selectedLabel, setSelectedLabel}:{selectedLabel:any, setSele
     }, []);
 
     return (
-        <div className=''>
+        <div>
             <h2 className='text-center'>Filter</h2>
             <div className="form-control w-full max-w-xs">
                 <label className='label'>

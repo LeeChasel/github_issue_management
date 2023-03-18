@@ -47,21 +47,18 @@ export default function CreateIssueUI({token}:{token:string})
                     <Dialog.Title className="text-2xl font-bold text-center">Enter your Issue</Dialog.Title>
                     <div className="mt-8 max-w-md">
                         <form method="POST" onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
-                            <label className='block'>
-                                <span>Title</span>
-                                <input type="text" id="title" name="title" required  className='indent-1 mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0'/>
-                            </label>
-                            <label className='block'>
-                                <span className='mr-7'>Type your comment</span>
-                                <span>at least 30 letters</span>
-                                <textarea
-                                    name='body'
-                                    rows={4}
-                                    cols={40}
-                                    required
-                                    minLength={30}
-                                />
-                            </label>
+                            <div className="form-control w-full max-w-xs">
+                                <label className="label">
+                                    <span className="label-text">Title</span>
+                                </label>
+                            <input type="text" name="title" required placeholder="Title here" className="input input-bordered w-full max-w-xs" />
+                            </div>
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">Type your comment</span>
+                                </label>
+                                <textarea name='body' required minLength={30} className="textarea textarea-bordered h-24" placeholder="Comment here" />
+                            </div>
                             {username == process.env.NEXT_PUBLIC_REPO_OWNER && <CreateLabelUI token={token}/>}
                             <div className="relative" >
                                 <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Create New Issue</button>
@@ -74,5 +71,4 @@ export default function CreateIssueUI({token}:{token:string})
         </Dialog>
         </>
     )
-
 }
