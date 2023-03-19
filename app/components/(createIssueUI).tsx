@@ -41,31 +41,32 @@ export default function CreateIssueUI({token}:{token:string})
             <IoIosAddCircleOutline className='h-5 w-5'/>
             Create Issue
         </button>
-        <Dialog open={isopen} onClose={() => setIsopen(false)} className="w-full relative z-50">
-            <div className="fixed inset-0 flex items-center justify-center p-4 w-full">
-                <Dialog.Panel className="w-1/3 rounded bg-sky-300 py-12 px-7">
-                    <Dialog.Title className="text-2xl font-bold text-center">Enter your Issue</Dialog.Title>
-                    <div className="mt-8 max-w-md">
-                        <form method="POST" onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
-                            <div className="form-control w-full max-w-xs">
-                                <label className="label">
-                                    <span className="label-text">Title</span>
-                                </label>
-                            <input type="text" name="title" required placeholder="Title here" className="input input-bordered w-full max-w-xs" />
+        <Dialog open={isopen} onClose={() => setIsopen(false)} className="w-full h-full relative z-50">
+            <div className="fixed inset-0 flex items-center justify-center p-4 w-full h-full">
+                <Dialog.Panel className="w-1/2 rounded bg-sky-300 py-12 px-7 h-full">
+                    <Dialog.Title className="text-2xl font-bold text-center">Create Issue</Dialog.Title>
+                        <form method="POST" onSubmit={handleSubmit} className="flex flex-col w-full h-full pb-6 space-y-6">
+                            <div className="form-control justify-evenly w-full h-full">
+                                <div className='w-full h-1/5'>
+                                    <label className="label">
+                                        <span className="label-text">Title</span>
+                                    </label>
+                                    <input type="text" name="title" required placeholder="Title here" className="input input-bordered w-full " />
+                                </div>
+                                <div className='w-full h-2/5'>
+                                    <label className="label">
+                                        <span className="label-text">Type your comment</span>
+                                        <span className="label-text-alt">At least 30 words</span>
+                                    </label>
+                                    <textarea name='body' required minLength={30} className="textarea textarea-bordered h-4/5 w-full" placeholder="Comment here" />
+                                </div>
+                                {username == process.env.NEXT_PUBLIC_REPO_OWNER && <CreateLabelUI token={token}/>}
                             </div>
-                            <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Type your comment</span>
-                                </label>
-                                <textarea name='body' required minLength={30} className="textarea textarea-bordered h-24" placeholder="Comment here" />
-                            </div>
-                            {username == process.env.NEXT_PUBLIC_REPO_OWNER && <CreateLabelUI token={token}/>}
-                            <div className="relative" >
-                                <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Create New Issue</button>
-                                <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 right-0 w-5/12 absolute" onClick={() => setIsopen(false)}>Cancel</button>
+                            <div className='flex justify-around'>
+                                <button className="btn w-1/3 rounded-full" onClick={() => setIsopen(false)}>Cancel</button>
+                                <button className="btn w-1/3 rounded-full" type="submit">Create</button>
                             </div>
                         </form>
-                    </div>
                 </Dialog.Panel>
             </div>
         </Dialog>

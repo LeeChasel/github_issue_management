@@ -43,26 +43,26 @@ interface Labels
 
 function IssueContent()
 {
-    const [content, setContent] = useState<FormContent>()
+    const [data, setData] = useState<FormContent>()
     useEffect(() => {
         getIssueContent(token, issue_number).then(res => {
-            setContent(res);
+            setData(res);
         })
     }, []);
     return (
-        <div className="mt-3 bg-gray-400 p-2">
+        <div className="bg-gray-400">
         <div>
-            <h1 className="text-red-600 font-bold text-4xl">{content?.title} #{issue_number}</h1>
+            <h1 className="text-red-600 font-bold text-4xl">{data?.title} #{issue_number}</h1>
         </div>
-        <div>
-            <p className="bg-gray-400">{content?.body}</p>
-            <h3 className="text-blue-500">created by {content?.user.login}</h3>
-            <h3 className="text-blue-500">status: {content?.state}</h3>
-            <h3 className="text-blue-500">label: {content?.labels.length ? content?.labels[0].name : "don't have label"}</h3>
-        </div>
-        {(username == content?.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
+        {/* <div>
+            <p className="bg-gray-400">{data?.body}</p>
+            <h3 className="text-blue-500">created by {data?.user.login}</h3>
+            <h3 className="text-blue-500">status: {data?.state}</h3>
+            <h3 className="text-blue-500">label: {data?.labels.length ? data?.labels[0].name : "don't have label"}</h3>
+        </div> */}
+        {(username == data?.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
             <div>
-                <UpdateIssueUI token={token} data={content!}/>
+                <UpdateIssueUI token={token} data={data!}/>
                 <DeleteIssueUI token={token} issue_number={issue_number}/>
             </div>
         }
@@ -117,12 +117,14 @@ export default function IssueDetailPage({params}:{params:{id: string}})
     issue_number = params.id;
     username = setUsername();
     return (
-        <div className="flex justify-center">
-            <div className="w-3/4">
+        <main className="h-full flex flex-col">
+        {/* <div className="flex justify-center"> */}
+            {/* <div className="h-full"> */}
                 <IssueContent />
                 <IssueComments />
                 <CreateCommentUI issue_number={issue_number} token={token}/>
-            </div>
-        </div>
+            {/* </div> */}
+        {/* </div> */}
+        </main>
     )
 }

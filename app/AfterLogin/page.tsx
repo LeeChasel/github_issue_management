@@ -7,6 +7,7 @@ import CreateIssueUI from '../components/(createIssueUI)';
 import { getLebelsInRepo, getIssuesWithSearchstring } from '../(fetchResource)';
 import { CgSearch } from 'react-icons/cg'
 import { BsInfoCircle } from 'react-icons/bs'
+import { useRouter } from 'next/navigation';
 
 let token = "";
 
@@ -57,6 +58,7 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
     useEffect(() => {
         setTable(document.getElementById("scrollableDiv")?.offsetHeight!)
     }, [])
+    const router = useRouter();
     return (
         <>
         <div className='h-full max-h-full max-w-full grow bg-pink-400 overflow-auto' id='scrollableDiv'>
@@ -75,7 +77,7 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
                 </div>
             }
             >   
-                <table className='table table-zebra w-full'>
+                <table className='table w-full'>
                     <thead>
                         <tr>
                             <th>#</th>
@@ -87,16 +89,18 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
                     </thead>
                     <tbody>
                         {items && items.map((item:FormData) => (
-                            <tr key={item.number}>
+                            <tr key={item.number} className="hover cursor-pointer" onClick={() => router.push(`/AfterLogin/issues/${item.number}?access_token=${token}`)}>
+                                {/* <Link  href={`/AfterLogin/issues/${item.number}?access_token=${token}`}> */}
                                 <th>
-                                    <Link href={`/AfterLogin/issues/${item.number}?access_token=${token}`}>
-                                        {item.number}
-                                    </Link>
+                                    {/* <Link href={`/AfterLogin/issues/${item.number}?access_token=${token}`}> */}
+                                {item.number}
+                                    {/* </Link> */}
                                 </th>
                                 <td>{item.title}</td>
                                 <td>{item.body}</td>
                                 <td>Author</td>
                                 <td>{item.labels.length ? item.labels[0].name : null}</td>
+                                {/* </Link> */}
                             </tr>
                         ))}
                     </tbody>
@@ -168,7 +172,7 @@ function DisplayIssue()
         setSortByOld(e.target.value === "oldest")
     }
     return (
-        <div className='h-full relative flex flex-col'>
+        <div className='h-full flex flex-col'>
             <SearchBox searchString={searchString} setSearchString={setSearchString}/>
             <div className="divider m-1" />
             <div className='flex bg-red-500 grow'>

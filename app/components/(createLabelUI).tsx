@@ -21,11 +21,11 @@ export default function CreateLabelUI({token}:{token:string})
     }, []);
 
     return (
-        <div className="form-control w-full max-w-xs">
+        <div className='w-full h-1/5'>
             <label className='label'>
                 <span className='label-text'>Pick a filter</span>
             </label>
-            <select name='labels' className='select select-bordered'>
+            <select name='labels' className='select select-bordered w-full'>
                 {labels.map(label => (
                     //補顏色
                     <option key={label.id} value={label.name}>{label.name}</option>
