@@ -193,7 +193,7 @@ function DisplayIssue()
                         </form>
                     </div>
                 </div>
-                <div className='flex flex-col w-5/6 relative bg-yellow-300'>
+                <div className='flex flex-col w-5/6 bg-yellow-300'>
                         <CreateIssueUI token={token}/>
                         <DataList selectedLabel={selectedLabel} searchString={searchString} sortByOld={sortByOld}/>
                 </div>

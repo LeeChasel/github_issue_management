@@ -4,11 +4,13 @@ let REPO = process.env.NEXT_PUBLIC_REPO_NAME;
 interface FormContent
 {
     number: number;
-    state: string;
+    html_url: string;
     title: string;
     body: string;
     user: FormUser;
     labels: Labels[];
+    created_at: Date;
+    updated_at: Date;
 }
 interface FormComment 
 {

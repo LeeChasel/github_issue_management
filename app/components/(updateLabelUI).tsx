@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getLebelsInRepo, setLabel } from "@/app/(fetchResource)";
+import { AiOutlineSetting } from 'react-icons/ai'
 
 interface Labels
 {
@@ -20,24 +21,21 @@ export default function UpdateLabelUI({token, issue_number}:{token:string, issue
         });
     }, []);
 
-    function handleChange(e:string)
+    function handleChange(changeLabel:string)
     {
         const formData = new FormData();
-        formData.append("labels", e)
+        formData.append("labels", changeLabel)
         const formJson = Object.fromEntries(formData.entries());
         setLabel(token, issue_number, formJson).then(() => window.location.reload());
     }
     return (
-        <>
-        <label>
-            <span>change label : </span>
-            <select name="labels" value="default" onChange={(e) => handleChange(e.currentTarget.value)}>
-                <option value="default" disabled>choose label</option>
+        <div className="dropdown dropdown-right">
+            <label tabIndex={0} className="btn btn-ghost mx-1"><AiOutlineSetting/></label>
+            <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48">
                 {labels.map(label => (
-                    <option key={label.id} value={label.name}>{label.name}</option>
+                    <li key={label.id} onClick={() => handleChange(label.name)}><p className='p-1'>{label.name}</p></li>
                 ))}
-            </select>
-        </label>
-        </>
+            </ul>
+        </div>
     )
 }

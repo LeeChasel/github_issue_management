@@ -28,11 +28,13 @@ interface FormUser
 interface FormContent
 {
     number: number;
-    state: string;
+    html_url: string;
     title: string;
     body: string;
     user: FormUser;
     labels: Labels[];
+    created_at: Date;
+    updated_at: Date;
 }
 interface Labels
 {
@@ -50,26 +52,14 @@ function IssueContent()
         })
     }, []);
     return (
-        <div className="bg-gray-400">
-        <div>
-            <h1 className="text-red-600 font-bold text-4xl">{data?.title} #{issue_number}</h1>
-        </div>
-        {/* <div>
-            <p className="bg-gray-400">{data?.body}</p>
-            <h3 className="text-blue-500">created by {data?.user.login}</h3>
-            <h3 className="text-blue-500">status: {data?.state}</h3>
-            <h3 className="text-blue-500">label: {data?.labels.length ? data?.labels[0].name : "don't have label"}</h3>
-        </div> */}
-        {(username == data?.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
-            <div>
-                <UpdateIssueUI token={token} data={data!}/>
+        <div className="flex items-center mt-3 bg-gray-400">
+            <h1 className="grow font-bold text-4xl">{data?.title}</h1>
+            {(username == data?.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
+            <div className="flex gap-1 items-center basis-1/6 m-3">
                 <DeleteIssueUI token={token} issue_number={issue_number}/>
+                <UpdateIssueUI token={token} data={data!}/>
             </div>
-        }
-        {username == process.env.NEXT_PUBLIC_REPO_OWNER && 
-            <UpdateLabelUI token={token} issue_number={issue_number}/>
-        }
-        <br/>
+            }
         </div>
     )
 }
@@ -110,6 +100,30 @@ function setUsername()
     return name;
 }
 
+function IssueInfo()
+{
+    const [data, setData] = useState<FormContent>()
+    useEffect(() => {
+        getIssueContent(token, issue_number).then(res => {
+            setData(res);
+        })
+    }, []);
+    return (
+        <>
+        <span>ID : {data?.number}</span>
+        <span>Author : {data?.user.login}</span>
+        <div>
+            <span>State : {data?.labels.length ? data.labels[0].name: null}</span>
+            {username == process.env.NEXT_PUBLIC_REPO_OWNER && 
+            <UpdateLabelUI token={token} issue_number={issue_number}/>
+            }
+        </div>
+        <span>Created Time : {data ? new Date(data.created_at.toString()).toLocaleString() : ""}</span>
+        <span>Updated Time : {data ? new Date(data.updated_at.toString()).toLocaleString() : ""}</span>                
+        </>
+    )
+}
+
 export default function IssueDetailPage({params}:{params:{id: string}})
 {
     const searchParams = useSearchParams();
@@ -118,13 +132,17 @@ export default function IssueDetailPage({params}:{params:{id: string}})
     username = setUsername();
     return (
         <main className="h-full flex flex-col">
-        {/* <div className="flex justify-center"> */}
-            {/* <div className="h-full"> */}
                 <IssueContent />
-                <IssueComments />
-                <CreateCommentUI issue_number={issue_number} token={token}/>
-            {/* </div> */}
-        {/* </div> */}
+                <div className="divider m-1"/>
+                <div className="flex grow bg-red-200">
+                    <div className="flex flex-col w-1/6 bg-blue-200">
+                        <IssueInfo/>
+                    </div>
+                    <div className="flex flex-col w-5/6 bg-yellow-300">
+                        <IssueComments />
+                        <CreateCommentUI issue_number={issue_number} token={token}/>
+                    </div>
+                </div>
         </main>
     )
 }
