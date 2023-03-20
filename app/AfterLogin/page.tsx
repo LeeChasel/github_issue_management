@@ -1,6 +1,5 @@
 'use client'
 import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
 import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateIssueUI from '../components/(createIssueUI)';

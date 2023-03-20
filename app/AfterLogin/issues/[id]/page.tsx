@@ -9,6 +9,7 @@ import UpdateIssueUI from "@/app/components/(updateIssueUI)";
 import DeleteCommentUI from "@/app/components/(deleteCommentUI)";
 import DeleteIssueUI from "@/app/components/(deleteIssueUI)";
 import UpdateLabelUI from "@/app/components/(updateLabelUI)";
+import { FiMoreHorizontal } from 'react-icons/fi'
 
 let issue_number = "";
 let token = "";
@@ -47,9 +48,7 @@ function IssueContent()
 {
     const [data, setData] = useState<FormContent>()
     useEffect(() => {
-        getIssueContent(token, issue_number).then(res => {
-            setData(res);
-        })
+        getIssueContent(token, issue_number).then(res => setData(res))
     }, []);
     return (
         <div className="flex items-center mt-3 bg-gray-400">
@@ -67,24 +66,32 @@ function IssueContent()
 function IssueComments()
 {
     const [comments, setComments] = useState<FormComment[]>([]);
+    const [data, setData] = useState<FormContent>();
     useEffect(() => {
         getComments(token, issue_number).then(res => setComments(res));
-    }, [])
+        getIssueContent(token, issue_number).then(res => setData(res));
+    }, []);
     return (
         <>
+        <div className="w-full flex flex-col p-4 gap-2 bg-blue-600">
+            <h2>{data?.user.login}</h2>
+            <pre className="w-full h-20 bg-yellow-200">bb</pre>
+        </div>
         {comments.map(comment => (
-            <div key={comment.id}>
-                <br/>
-                <div className="bg-yellow-300 p-2">
-                    <h2 className="text-blue-500">{comment.user.login}</h2>
-                    <pre>{comment.body}</pre>
+            <div key={comment.id} className="w-full flex flex-col p-4 gap-1 bg-blue-600">
+                <div className="flex items-center">
+                    <h2 className="grow">{comment.user.login}</h2>
                     {(username == comment.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
-                     <div>
-                        <UpdateCommentUI token={token} id={comment.id} text={comment.body}/>
-                        <DeleteCommentUI token={token} id={comment.id}/>
+                    <div className="dropdown dropdown-left">
+                        <label tabIndex={0} className="btn btn-sm btn-ghost m-1"><FiMoreHorizontal/></label>
+                        <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48">
+                            <UpdateCommentUI token={token} id={comment.id} text={comment.body}/>
+                            <DeleteCommentUI token={token} id={comment.id}/>
+                        </ul>
                     </div>
                     }
                 </div>
+                <pre className="w-full h-20 bg-yellow-200">{comment.body}</pre>
             </div>
         ))}
         </>
@@ -138,9 +145,11 @@ export default function IssueDetailPage({params}:{params:{id: string}})
                     <div className="flex flex-col w-1/6 bg-blue-200">
                         <IssueInfo/>
                     </div>
-                    <div className="flex flex-col w-5/6 bg-yellow-300">
-                        <IssueComments />
-                        <CreateCommentUI issue_number={issue_number} token={token}/>
+                    <div className="flex justify-center items-center w-5/6 bg-yellow-300">
+                        <div className="w-10/12 h-5/6 bg-green-400">
+                            <IssueComments />
+                            {/* <CreateCommentUI issue_number={issue_number} token={token}/> */}
+                        </div>
                     </div>
                 </div>
         </main>

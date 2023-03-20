@@ -12,7 +12,7 @@ export default function DeleteCommentUI({token, id}:{token:string, id:string})
 
     return (
         <>
-        <button onClick={() => setIsopen(true)}>Delete</button>
+        <li><button onClick={() => setIsopen(true)}>Delete</button></li>
         <Dialog open={isopen} onClose={() => setIsopen(false)} className="w-full relative z-50">
             <div className="fixed inset-0 flex items-center justify-center p-4 w-full">
                 <Dialog.Panel className="w-1/3 rounded bg-sky-300 py-12 px-7">
