@@ -89,17 +89,13 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
                     <tbody>
                         {items && items.map((item:FormData) => (
                             <tr key={item.number} className="hover cursor-pointer" onClick={() => router.push(`/AfterLogin/issues/${item.number}?access_token=${token}`)}>
-                                {/* <Link  href={`/AfterLogin/issues/${item.number}?access_token=${token}`}> */}
                                 <th>
-                                    {/* <Link href={`/AfterLogin/issues/${item.number}?access_token=${token}`}> */}
                                 {item.number}
-                                    {/* </Link> */}
                                 </th>
                                 <td>{item.title}</td>
                                 <td>{item.body}</td>
                                 <td>Author</td>
                                 <td>{item.labels.length ? item.labels[0].name : null}</td>
-                                {/* </Link> */}
                             </tr>
                         ))}
                     </tbody>
@@ -113,7 +109,6 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
 function LabelsSel({selectedLabel, setSelectedLabel}:{selectedLabel:any, setSelectedLabel: any})
 {
     const [data, setData] = useState<Labels[]>([{color: "33FFE6", id: 0, name: "All"}]);
-    // const [selectedLabel, setselectedLabel] = useState("All");
     useEffect(() => {
         getLebelsInRepo(token).then(res => {
             let newRes: Labels[] = res.map((item:any) => {
@@ -149,7 +144,7 @@ function SearchBox({searchString, setSearchString}:{searchString:string, setSear
         setSearchString(e.currentTarget.search.value);
     }
     return (
-        <div className="form-control pt-3">
+        <div className="form-control py-3">
             <form className="input-group justify-center" method='POST' onSubmit={handleSubmit}>
                 <input type="text" name='search' placeholder='Search' defaultValue={searchString} className="input input-bordered" />
                 <button className="btn btn-square" type='submit'>
@@ -173,7 +168,6 @@ function DisplayIssue()
     return (
         <div className='h-full flex flex-col'>
             <SearchBox searchString={searchString} setSearchString={setSearchString}/>
-            <div className="divider m-1" />
             <div className='flex bg-red-500 grow'>
                 <div className='flex flex-col w-1/6 gap-y-4 divide-y bg-blue-200'>
                     <h3 className='text-center pt-2'>Welcome, name</h3>

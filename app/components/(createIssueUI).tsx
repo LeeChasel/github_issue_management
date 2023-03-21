@@ -55,7 +55,7 @@ export default function CreateIssueUI({token}:{token:string})
                                 </div>
                                 <div className='w-full h-2/5'>
                                     <label className="label">
-                                        <span className="label-text">Type your comment</span>
+                                        <span className="label-text">Type Your Comment</span>
                                         <span className="label-text-alt">At least 30 words</span>
                                     </label>
                                     <textarea name='body' required minLength={30} className="textarea textarea-bordered h-4/5 w-full" placeholder="Comment here" />

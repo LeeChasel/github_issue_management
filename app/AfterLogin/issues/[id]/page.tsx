@@ -51,15 +51,17 @@ function IssueContent()
         getIssueContent(token, issue_number).then(res => setData(res))
     }, []);
     return (
-        <div className="flex items-center mt-3 bg-gray-400">
+        <>
+        <div className="h-1/6 flex items-center bg-gray-400">
             <h1 className="grow font-bold text-4xl">{data?.title}</h1>
             {(username == data?.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
-            <div className="flex gap-1 items-center basis-1/6 m-3">
+            <div className="flex gap-1 items-center basis-1/6 mx-3">
                 <DeleteIssueUI token={token} issue_number={issue_number}/>
                 <UpdateIssueUI token={token} data={data!}/>
             </div>
             }
         </div>
+        </>
     )
 }
 
@@ -75,7 +77,7 @@ function IssueComments()
         <>
         <div className="w-full flex flex-col p-4 gap-2 bg-blue-600">
             <h2>{data?.user.login}</h2>
-            <pre className="w-full h-20 bg-yellow-200">bb</pre>
+            <pre className="w-full h-20 bg-yellow-200">{data?.body}</pre>
         </div>
         {comments.map(comment => (
             <div key={comment.id} className="w-full flex flex-col p-4 gap-1 bg-blue-600">
@@ -91,7 +93,7 @@ function IssueComments()
                     </div>
                     }
                 </div>
-                <pre className="w-full h-20 bg-yellow-200">{comment.body}</pre>
+                <pre className="w-full h-20 whitespace-pre-wrap bg-yellow-200">{comment.body}</pre>
             </div>
         ))}
         </>
@@ -140,15 +142,16 @@ export default function IssueDetailPage({params}:{params:{id: string}})
     return (
         <main className="h-full flex flex-col">
                 <IssueContent />
-                <div className="divider m-1"/>
-                <div className="flex grow bg-red-200">
+                <div className="flex bg-red-200 ">
                     <div className="flex flex-col w-1/6 bg-blue-200">
                         <IssueInfo/>
                     </div>
                     <div className="flex justify-center items-center w-5/6 bg-yellow-300">
-                        <div className="w-10/12 h-5/6 bg-green-400">
-                            <IssueComments />
+                        <div className="w-10/12 h-5/6 bg-green-400 overflow-y-auto overflow-x-hidden">
+                            {/* <div className="w-full bg-gray-400"> */}a
+                            {/* <IssueComments /> */}
                             {/* <CreateCommentUI issue_number={issue_number} token={token}/> */}
+                            {/* </div> */}
                         </div>
                     </div>
                 </div>

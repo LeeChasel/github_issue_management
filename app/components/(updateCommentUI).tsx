@@ -17,38 +17,22 @@ export default function UpdateCommentUI({token, id, text}:{token:string, id: str
     return (
         <>
         <li><button onClick={() => setIsopen(true)}>Edit</button></li>
-        <Dialog open={isopen} onClose={() => setIsopen(false)} className="w-full h-full relative z-50">
-            <div className="fixed inset-0 flex items-center justify-center p-4 w-full h-full">
-                <Dialog.Panel className="w-1/2 rounded bg-sky-300 py-12 px-7 h-1/3 ">
+        <Dialog open={isopen} onClose={() => setIsopen(false)} className="w-full relative z-50">
+            <div className="fixed inset-0 flex items-center justify-center p-4 w-full">
+                <Dialog.Panel className="w-1/2 h-96 rounded bg-sky-300 py-12 px-7">
                     <Dialog.Title className="text-2xl font-bold text-center">Type Comment</Dialog.Title>
-                    <div className="mt-8 w-full">
-                        <form method='post' onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
-                        <div className='w-full h-2/5'>
-                                    <label className="label">
-                                        <span className="label-text">Type your comment</span>
-                                        <span className="label-text-alt">At least 30 words</span>
-                                    </label>
-                                    <textarea name='body' required minLength={30} className="textarea textarea-bordered h-4/5 w-full" placeholder="Comment here" />
-                                </div>
-
-
-                            {/* <label>
-                                Edit your comment here : 
-                                <textarea
-                                    name='body'
-                                    rows={4}
-                                    cols={40}
-                                    defaultValue={text}
-                                    autoFocus
-                                    required
-                                />
-                            </label> */}
-                            <div className="relative">
-                                <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Edit Data</button>
-                                <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 right-0 w-5/12 absolute" onClick={() => setIsopen(false)}>Cancel</button>
+                        <form method='post' onSubmit={handleSubmit} className="flex flex-col w-full h-full pb-6 space-y-6">
+                            <div className='form-control justify-evenly w-full h-full'>
+                                <label className="label">
+                                    <span className="label-text">Type Your Comment</span>
+                                </label>
+                                <textarea name='body' defaultValue={text} autoFocus required className="textarea textarea-bordered w-full h-full resize-none" placeholder="Comment here" />
+                            </div>
+                            <div className='flex justify-around w-full'>
+                                <button className="btn w-1/3 rounded-full" onClick={() => setIsopen(false)}>Cancel</button>
+                                <button className="btn w-1/3 rounded-full" type="submit">Edit Data</button>
                             </div>
                         </form>
-                    </div>
                 </Dialog.Panel>
             </div>
         </Dialog>
