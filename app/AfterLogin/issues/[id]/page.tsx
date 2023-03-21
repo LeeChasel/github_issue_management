@@ -52,10 +52,10 @@ function IssueContent()
     }, []);
     return (
         <>
-        <div className="h-1/6 flex items-center bg-gray-400">
+        <div className="flex items-center py-5 bg-gray-400">
             <h1 className="grow font-bold text-4xl">{data?.title}</h1>
             {(username == data?.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
-            <div className="flex gap-1 items-center basis-1/6 mx-3">
+            <div className="flex gap-4 items-center justify-center basis-1/6 ml-5 mr-10">
                 <DeleteIssueUI token={token} issue_number={issue_number}/>
                 <UpdateIssueUI token={token} data={data!}/>
             </div>
@@ -93,7 +93,7 @@ function IssueComments()
                     </div>
                     }
                 </div>
-                <pre className="w-full h-20 whitespace-pre-wrap bg-yellow-200">{comment.body}</pre>
+                <pre className="w-full h-40 max-h-40 bg-yellow-200 overflow-auto">{comment.body}</pre>
             </div>
         ))}
         </>
@@ -149,7 +149,7 @@ export default function IssueDetailPage({params}:{params:{id: string}})
                     <div className="flex justify-center items-center w-5/6 bg-yellow-300">
                         <div className="w-10/12 h-5/6 bg-green-400 overflow-y-auto overflow-x-hidden">
                             {/* <div className="w-full bg-gray-400"> */}a
-                            {/* <IssueComments /> */}
+                            <IssueComments />
                             {/* <CreateCommentUI issue_number={issue_number} token={token}/> */}
                             {/* </div> */}
                         </div>
