@@ -5,7 +5,6 @@ import { createComment } from '../(fetchResource)';
 export default function CreateCommentUI({issue_number, token}:{issue_number:string, token:string})
 {
     const [isopen, setIsopen] = useState(false);
-    
     function handleSubmit(e:any)
     {
         e.preventDefault();
@@ -13,34 +12,29 @@ export default function CreateCommentUI({issue_number, token}:{issue_number:stri
         const formJson = Object.fromEntries(formData.entries());
         createComment(formJson, issue_number, token).then(() => window.location.reload());
     }
-
-    if (!isopen) return <button onClick={() => setIsopen(true)}>write comment</button>
     
     return (
-        <Dialog open={isopen} onClose={() => setIsopen(false)} className="w-full relative z-50">
-            <div className="fixed inset-0 flex items-center justify-center p-4 w-full">
-                <Dialog.Panel className="w-1/3 rounded bg-sky-300 py-12 px-7">
-                    <Dialog.Title className="text-2xl font-bold text-center">Enter your data</Dialog.Title>
-                    <div className="mt-8 max-w-md">
-                        <form method='post' onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
-                            <label>
-                                Type your comment here : 
-                                <textarea
-                                    name='body'
-                                    rows={4}
-                                    cols={40}
-                                    autoFocus
-                                    required
-                                />
-                            </label>
-                            <div className="relative">
-                                <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 left-0 w-5/12 absolute" type="submit">Create New Data</button>
-                                <button className="bg-red-300 rounded-full hover:bg-red-400 active:bg-red-500 right-0 w-5/12 absolute" onClick={() => setIsopen(false)}>Cancel</button>
-                            </div>
-                        </form>
-                    </div>
-                </Dialog.Panel>
-            </div>
-        </Dialog>
+        <div className='flex justify-end mt-5'>
+            <button onClick={() => setIsopen(true)} className="mr-6 btn btn-wide">Write Comment</button>
+            <Dialog open={isopen} onClose={() => setIsopen(false)} className="w-full relative z-50">
+                <div className="fixed inset-0 flex items-center justify-center p-4 w-full">
+                    <Dialog.Panel className="w-1/2 h-96 rounded bg-sky-300 py-12 px-7">
+                        <Dialog.Title className="text-2xl font-bold text-center">Write New Comment</Dialog.Title>
+                            <form method='post' onSubmit={handleSubmit} className="flex flex-col w-full h-full pb-6 space-y-6">
+                                <div className='form-control justify-evenly w-full h-full'>
+                                    <label className="label">
+                                        <span className="label-text">Type Your Comment</span>
+                                    </label>
+                                    <textarea name='body' autoFocus required className="textarea textarea-bordered w-full h-full resize-none" placeholder="Comment here" />
+                                </div>
+                                <div className='flex justify-around w-full'>
+                                    <button className="btn w-1/3 rounded-full" onClick={() => setIsopen(false)}>Cancel</button>
+                                    <button className="btn w-1/3 rounded-full" type="submit">Comment</button>
+                                </div>
+                            </form>
+                    </Dialog.Panel>
+                </div>
+            </Dialog>   
+        </div>
     )
 }

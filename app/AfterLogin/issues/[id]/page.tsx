@@ -10,6 +10,8 @@ import DeleteCommentUI from "@/app/components/(deleteCommentUI)";
 import DeleteIssueUI from "@/app/components/(deleteIssueUI)";
 import UpdateLabelUI from "@/app/components/(updateLabelUI)";
 import { FiMoreHorizontal } from 'react-icons/fi'
+import { GrCaretPrevious } from 'react-icons/gr'
+import { useRouter } from "next/navigation";
 
 let issue_number = "";
 let token = "";
@@ -52,7 +54,7 @@ function IssueContent()
     }, []);
     return (
         <>
-        <div className="flex items-center py-5 bg-gray-400">
+        <div className="flex items-center h-[10%] bg-gray-400">
             <h1 className="grow font-bold text-4xl">{data?.title}</h1>
             {(username == data?.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
             <div className="flex gap-4 items-center justify-center basis-1/6 ml-5 mr-10">
@@ -77,25 +79,27 @@ function IssueComments()
         <>
         <div className="w-full flex flex-col p-4 gap-2 bg-blue-600">
             <h2>{data?.user.login}</h2>
-            <pre className="w-full h-20 bg-yellow-200">{data?.body}</pre>
+            <pre className="w-full min-h-8 bg-yellow-200">{data?.body}</pre>
         </div>
-        {comments.map(comment => (
-            <div key={comment.id} className="w-full flex flex-col p-4 gap-1 bg-blue-600">
-                <div className="flex items-center">
-                    <h2 className="grow">{comment.user.login}</h2>
-                    {(username == comment.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
-                    <div className="dropdown dropdown-left">
-                        <label tabIndex={0} className="btn btn-sm btn-ghost m-1"><FiMoreHorizontal/></label>
-                        <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48">
-                            <UpdateCommentUI token={token} id={comment.id} text={comment.body}/>
-                            <DeleteCommentUI token={token} id={comment.id}/>
-                        </ul>
+        <div className="flex flex-col w-full">
+            {comments.map(comment => (
+                <div key={comment.id} className="w-full flex flex-col p-4 gap-1 bg-blue-600">
+                    <div className="flex items-center">
+                        <h2 className="grow">{comment.user.login}</h2>
+                        {(username == comment.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
+                        <div className="dropdown dropdown-left">
+                            <label tabIndex={0} className="btn btn-sm btn-ghost m-1"><FiMoreHorizontal/></label>
+                            <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48">
+                                <UpdateCommentUI token={token} id={comment.id} text={comment.body}/>
+                                <DeleteCommentUI token={token} id={comment.id}/>
+                            </ul>
+                        </div>
+                        }
                     </div>
-                    }
+                    <pre className="w-full min-h-8 bg-yellow-200">{comment.body}</pre>
                 </div>
-                <pre className="w-full h-40 max-h-40 bg-yellow-200 overflow-auto">{comment.body}</pre>
-            </div>
-        ))}
+            ))}
+        </div>
         </>
     )
 }
@@ -139,19 +143,22 @@ export default function IssueDetailPage({params}:{params:{id: string}})
     token = searchParams.get("access_token")!;
     issue_number = params.id;
     username = setUsername();
+    const router = useRouter()
     return (
         <main className="h-full flex flex-col">
                 <IssueContent />
-                <div className="flex bg-red-200 ">
+                <div className="flex bg-red-200 h-[90%]">
                     <div className="flex flex-col w-1/6 bg-blue-200">
+                        <button className="btn gap-2 w-1/3" onClick={() => router.back()}>
+                            <GrCaretPrevious/>
+                            Previous
+                        </button>
                         <IssueInfo/>
                     </div>
-                    <div className="flex justify-center items-center w-5/6 bg-yellow-300">
-                        <div className="w-10/12 h-5/6 bg-green-400 overflow-y-auto overflow-x-hidden">
-                            {/* <div className="w-full bg-gray-400"> */}a
+                    <div className="flex justify-center h-full items-center w-5/6 bg-yellow-300 ">
+                        <div className="w-full mx-10 h-[95%] overflow-y-auto overflow-x-hidden">
                             <IssueComments />
-                            {/* <CreateCommentUI issue_number={issue_number} token={token}/> */}
-                            {/* </div> */}
+                            <CreateCommentUI issue_number={issue_number} token={token}/>
                         </div>
                     </div>
                 </div>
