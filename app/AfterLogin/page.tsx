@@ -3,12 +3,13 @@ import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CreateIssueUI from '../components/(createIssueUI)';
-import { getLebelsInRepo, getIssuesWithSearchstring } from '../(fetchResource)';
+import { getLebelsInRepo, getIssuesWithSearchstring, getUsername } from '../(fetchResource)';
 import { CgSearch } from 'react-icons/cg'
 import { BsInfoCircle } from 'react-icons/bs'
 import { useRouter } from 'next/navigation';
 
 let token = "";
+let username = "";
 
 interface FormData 
 {
@@ -24,6 +25,15 @@ interface Labels
     name: string;
 }
 
+function setUsername()
+{
+    const [name, setName] = useState("");
+    useEffect(() => {
+        getUsername(token).then(res => setName(res));
+    },[])
+    return name;
+}
+
 function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string, searchString:string, sortByOld:boolean})
 {
     const [items, setItems] = useState<FormData[]>([]);
@@ -37,7 +47,7 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
             {
                 setPage(1);
                 setItems(res);
-                setHasMore(res.length > 0);
+                setHasMore(res.length == 10);
             }
         })
         return () => {
@@ -49,24 +59,23 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
     {
         getIssuesWithSearchstring(token, page + 1, selectedLabel, sortByOld, searchString).then(res => {
             setItems([...items, ...res]);
-            setHasMore(res.length > 0);
+            setHasMore(res.length == 10);
             setPage(prev => prev + 1);
         });
     };
-    const [table , setTable] = useState(450);
-    useEffect(() => {
-        setTable(document.getElementById("scrollableDiv")?.offsetHeight!)
-    }, [])
+    let tableStyle = () => {
+        let TableHeight = document.getElementById("scrollableDiv")?.offsetHeight
+        return `max-h-[${TableHeight}px]`
+    }
+    
     const router = useRouter();
     return (
         <>
-        <div className='h-full max-h-full max-w-full grow bg-pink-400 overflow-auto' id='scrollableDiv'>
             <InfiniteScroll
             dataLength={items.length}
             next={fetchMoreData}
             hasMore={hasMore}
             loader={<button className="btn btn-ghost loading disabled">loading</button>}
-            height={table}
             endMessage={
                 <div className="alert alert-info shadow-lg justify-center">
                     <div>
@@ -75,10 +84,12 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
                     </div>
                 </div>
             }
-            >   
+            scrollableTarget="scrollableDiv"
+            className={tableStyle()}
+            >
                 <table className='table w-full'>
                     <thead>
-                        <tr>
+                        <tr className='h-20'>
                             <th>#</th>
                             <th>Title</th>
                             <th>Comment</th>
@@ -88,10 +99,8 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
                     </thead>
                     <tbody>
                         {items && items.map((item:FormData) => (
-                            <tr key={item.number} className="hover cursor-pointer" onClick={() => router.push(`/AfterLogin/issues/${item.number}?access_token=${token}`)}>
-                                <th>
-                                {item.number}
-                                </th>
+                            <tr key={item.number} className="hover cursor-pointer h-20" onClick={() => router.push(`/AfterLogin/issues/${item.number}?access_token=${token}`)}>
+                                <th>{item.number}</th>
                                 <td>{item.title}</td>
                                 <td>{item.body}</td>
                                 <td>Author</td>
@@ -101,7 +110,6 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
                     </tbody>
                 </table>
             </InfiniteScroll>
-        </div>
         </>
     )
 }
@@ -144,11 +152,11 @@ function SearchBox({searchString, setSearchString}:{searchString:string, setSear
         setSearchString(e.currentTarget.search.value);
     }
     return (
-        <div className="form-control py-3">
-            <form className="input-group justify-center" method='POST' onSubmit={handleSubmit}>
-                <input type="text" name='search' placeholder='Search' defaultValue={searchString} className="input input-bordered" />
-                <button className="btn btn-square" type='submit'>
-                    <CgSearch className='w-5 h-5'/>
+        <div className="form-control w-full h-[10%] items-center">
+            <form className="h-full input-group justify-center items-center" method='POST' onSubmit={handleSubmit}>
+                <input type="text" name='search' placeholder='Search' defaultValue={searchString} className="input input-bordered w-1/6 h-2/3" />
+                <button className="btn btn-square h-2/3" type='submit'>
+                    <CgSearch className='w-1/2 h-1/2'/>
                 </button>
              </form>
         </div>
@@ -168,9 +176,9 @@ function DisplayIssue()
     return (
         <div className='h-full flex flex-col'>
             <SearchBox searchString={searchString} setSearchString={setSearchString}/>
-            <div className='flex bg-red-500 grow'>
+            <div className='flex bg-red-500 h-[90%]'>
                 <div className='flex flex-col w-1/6 gap-y-4 divide-y bg-blue-200'>
-                    <h3 className='text-center pt-2'>Welcome, name</h3>
+                    <h3 className='text-center pt-2'>Welcome {username.toString()}</h3>
                     <LabelsSel selectedLabel={selectedLabel} setSelectedLabel={setSelectedLabel}/>
                     <div>
                         <h2>Sort</h2>                        
@@ -186,9 +194,11 @@ function DisplayIssue()
                         </form>
                     </div>
                 </div>
-                <div className='flex flex-col w-5/6 bg-yellow-300'>
-                        <CreateIssueUI token={token}/>
+                <div className='flex flex-col w-5/6 h-full bg-yellow-300'>
+                    <CreateIssueUI token={token}/>
+                    <div className="mx-10 h-[90%] overflow-y-auto" id='scrollableDiv'>
                         <DataList selectedLabel={selectedLabel} searchString={searchString} sortByOld={sortByOld}/>
+                    </div>
                 </div>
             </div> 
         </div>
@@ -199,6 +209,7 @@ export default function afterLogin()
 {
     const searchParams = useSearchParams();
     token = searchParams.get("access_token")!;
+    username = setUsername();
     return (
         <main className='bg-red-300 h-full'>
             <DisplayIssue />

@@ -55,7 +55,7 @@ function IssueContent()
     return (
         <>
         <div className="flex items-center h-[10%] bg-gray-400">
-            <h1 className="grow font-bold text-4xl">{data?.title}</h1>
+            <h1 className="grow font-bold text-4xl ml-7">{data?.title}</h1>
             {(username == data?.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
             <div className="flex gap-4 items-center justify-center basis-1/6 ml-5 mr-10">
                 <DeleteIssueUI token={token} issue_number={issue_number}/>
@@ -122,18 +122,35 @@ function IssueInfo()
         })
     }, []);
     return (
-        <>
-        <span>ID : {data?.number}</span>
-        <span>Author : {data?.user.login}</span>
-        <div>
-            <span>State : {data?.labels.length ? data.labels[0].name: null}</span>
-            {username == process.env.NEXT_PUBLIC_REPO_OWNER && 
-            <UpdateLabelUI token={token} issue_number={issue_number}/>
-            }
+        <div className="flex flex-col w-full px-3">
+            <dl>
+                <div className="bg-gray-100 grid grid-cols-3 gap-4 p-5">
+                    <dt>ID</dt>
+                    <dd className="col-span-2">{data?.number}</dd>
+                </div>
+                <div className="bg-white grid grid-cols-3 gap-4 p-5">
+                    <dt>Author</dt>
+                    <dd className="col-span-2">{data?.user.login}</dd>
+                </div>
+                <div className="bg-gray-100 grid grid-cols-3 gap-4">
+                    <dt className="p-5">State</dt>
+                    <dd className="p-5">{data?.labels.length ? data.labels[0].name: null}</dd>
+                    <dd className="p-2">
+                        {username == process.env.NEXT_PUBLIC_REPO_OWNER && 
+                            <UpdateLabelUI token={token} issue_number={issue_number}/>
+                        }
+                    </dd>
+                </div>
+                <div className="bg-white grid grid-cols-3 gap-4 p-5">
+                    <dt>Created</dt>
+                    <dd className="col-span-2">{data ? new Date(data.created_at.toString()).toLocaleString() : ""}</dd>
+                </div>
+                <div className="bg-gray-100 grid grid-cols-3 gap-4 p-5">
+                    <dt>Updated</dt>
+                    <dd className="col-span-2">{data ? new Date(data.updated_at.toString()).toLocaleString() : ""}</dd>
+                </div>
+            </dl>              
         </div>
-        <span>Created Time : {data ? new Date(data.created_at.toString()).toLocaleString() : ""}</span>
-        <span>Updated Time : {data ? new Date(data.updated_at.toString()).toLocaleString() : ""}</span>                
-        </>
     )
 }
 
@@ -149,7 +166,7 @@ export default function IssueDetailPage({params}:{params:{id: string}})
                 <IssueContent />
                 <div className="flex bg-red-200 h-[90%]">
                     <div className="flex flex-col w-1/6 bg-blue-200">
-                        <button className="btn gap-2 w-1/3" onClick={() => router.back()}>
+                        <button className="btn m-3 gap-2 w-1/3" onClick={() => router.back()}>
                             <GrCaretPrevious/>
                             Previous
                         </button>

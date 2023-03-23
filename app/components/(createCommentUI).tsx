@@ -14,8 +14,8 @@ export default function CreateCommentUI({issue_number, token}:{issue_number:stri
     }
     
     return (
-        <div className='flex justify-end mt-5'>
-            <button onClick={() => setIsopen(true)} className="mr-6 btn btn-wide">Write Comment</button>
+        <div className='flex justify-end'>
+            <button onClick={() => setIsopen(true)} className="m-5 btn btn-wide">Write Comment</button>
             <Dialog open={isopen} onClose={() => setIsopen(false)} className="w-full relative z-50">
                 <div className="fixed inset-0 flex items-center justify-center p-4 w-full">
                     <Dialog.Panel className="w-1/2 h-96 rounded bg-sky-300 py-12 px-7">
