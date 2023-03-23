@@ -12,6 +12,9 @@ import UpdateLabelUI from "@/app/components/(updateLabelUI)";
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { GrCaretPrevious } from 'react-icons/gr'
 import { useRouter } from "next/navigation";
+import ReactMarkdown from 'react-markdown'
+// import remarkGfm from 'remark-gfm'
+
 
 let issue_number = "";
 let token = "";
@@ -77,15 +80,15 @@ function IssueComments()
     }, []);
     return (
         <>
-        <div className="w-full flex flex-col p-4 gap-2 bg-blue-600">
-            <h2>{data?.user.login}</h2>
-            <pre className="w-full min-h-8 bg-yellow-200">{data?.body}</pre>
+        <div className="w-full flex flex-col p-4 gap-2 bg-blue-600 align-middle">
+            <h2 className="px-1">{data?.user.login}</h2>
+            <p className="p-2 w-full min-h-8 bg-yellow-200 whitespace-pre-wrap">{data?.body}</p>
         </div>
         <div className="flex flex-col w-full">
             {comments.map(comment => (
-                <div key={comment.id} className="w-full flex flex-col p-4 gap-1 bg-blue-600">
+                <div key={comment.id} className="w-full flex flex-col p-4 bg-blue-600">
                     <div className="flex items-center">
-                        <h2 className="grow">{comment.user.login}</h2>
+                        <h2 className="grow px-1">{comment.user.login}</h2>
                         {(username == comment.user.login || username == process.env.NEXT_PUBLIC_REPO_OWNER) &&
                         <div className="dropdown dropdown-left">
                             <label tabIndex={0} className="btn btn-sm btn-ghost m-1"><FiMoreHorizontal/></label>
@@ -96,7 +99,7 @@ function IssueComments()
                         </div>
                         }
                     </div>
-                    <pre className="w-full min-h-8 bg-yellow-200">{comment.body}</pre>
+                    <p className="p-2 w-full min-h-8 bg-yellow-200 whitespace-pre-wrap">{comment.body}</p>
                 </div>
             ))}
         </div>
