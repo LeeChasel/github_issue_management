@@ -89,7 +89,7 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
             >
                 <table className='table w-full'>
                     <thead>
-                        <tr className='h-20'>
+                        <tr className='h-28'>
                             <th>#</th>
                             <th>Title</th>
                             <th>Comment</th>
@@ -98,13 +98,19 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
                         </tr>
                     </thead>
                     <tbody>
+                        
                         {items && items.map((item:FormData) => (
-                            <tr key={item.number} className="hover cursor-pointer h-20" onClick={() => router.push(`/AfterLogin/issues/${item.number}?access_token=${token}`)}>
+                            <tr key={item.number} className="hover cursor-pointer h-28" onClick={() => router.push(`/AfterLogin/issues/${item.number}?access_token=${token}`)}>
                                 <th>{item.number}</th>
                                 <td>{item.title}</td>
                                 <td>{item.body}</td>
                                 <td>Author</td>
-                                <td>{item.labels.length ? item.labels[0].name : null}</td>
+                                <td>
+                                    {item.labels.length ? (
+                                        <div className={`bg-[#${item.labels[0].color}]`}>{item.labels[0].name}</div>
+                                        ) : null
+                                    }
+                                </td>
                             </tr>
                         ))}
                     </tbody>
