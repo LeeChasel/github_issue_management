@@ -15,7 +15,6 @@ import { useRouter } from "next/navigation";
 import ReactMarkdown from 'react-markdown'
 // import remarkGfm from 'remark-gfm'
 
-
 let issue_number = "";
 let token = "";
 let username = "";
