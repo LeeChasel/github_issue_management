@@ -17,6 +17,7 @@ interface FormData
     body: string; 
     number: string;
     labels: Labels[];
+    user: {login:string}
 }
 interface Labels
 {
@@ -63,51 +64,44 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
             setPage(prev => prev + 1);
         });
     };
-    let tableStyle = () => {
-        let TableHeight = document.getElementById("scrollableDiv")?.offsetHeight
-        return `max-h-[${TableHeight}px]`
-    }
-    
-    const router = useRouter();
+    const router = useRouter();    
     return (
         <>
             <InfiniteScroll
             dataLength={items.length}
             next={fetchMoreData}
             hasMore={hasMore}
-            loader={<button className="btn btn-ghost loading disabled">loading</button>}
+            loader={<button className="btn btn-ghost loading disabled text-lg">loading</button>}
             endMessage={
-                <div className="alert alert-info shadow-lg justify-center">
+                <div className="alert alert-info shadow-lg rounded-t-none justify-center">
                     <div>
                         <BsInfoCircle className='w-5 h-5'/>
-                        <span>No more data.</span>
+                        <span className='text-lg'>No more data.</span>
                     </div>
                 </div>
             }
             scrollableTarget="scrollableDiv"
-            className={tableStyle()}
             >
                 <table className='table w-full'>
                     <thead>
                         <tr className='h-28'>
-                            <th>#</th>
-                            <th>Title</th>
-                            <th>Comment</th>
-                            <th>Author</th>
-                            <th>State</th>
+                            <th className='text-base pl-8'>#</th>
+                            <th className='text-base'>Title</th>
+                            <th className='text-base'>Comment</th>
+                            <th className='text-base'>Author</th>
+                            <th className='text-base'>State</th>
                         </tr>
                     </thead>
                     <tbody>
-                        
                         {items && items.map((item:FormData) => (
-                            <tr key={item.number} className="hover cursor-pointer h-28" onClick={() => router.push(`/AfterLogin/issues/${item.number}?access_token=${token}`)}>
-                                <th>{item.number}</th>
-                                <td>{item.title}</td>
-                                <td>{item.body}</td>
-                                <td>Author</td>
-                                <td>
+                            <tr key={item.number} className="bg-red-200 hover cursor-pointer h-28" onClick={() => router.push(`/AfterLogin/issues/${item.number}?access_token=${token}`)}>
+                                <th className='text-lg pl-8 rounded-bl-none'>{item.number}</th>
+                                <td className='text-lg'>{item.title}</td>
+                                <td className='text-lg'>{item.body}</td>
+                                <td className='text-lg'>{item.user.login}</td>
+                                <td className='rounded-br-none'>
                                     {item.labels.length ? (
-                                        <div className={`bg-[#${item.labels[0].color}]`}>{item.labels[0].name}</div>
+                                        <div className="badge text-base px-5 h-8">{item.labels[0].name}</div>
                                         ) : null
                                     }
                                 </td>
@@ -133,16 +127,15 @@ function LabelsSel({selectedLabel, setSelectedLabel}:{selectedLabel:any, setSele
     }, []);
 
     return (
-        <div>
-            <h2 className='text-center'>Filter</h2>
-            <div className="form-control w-full max-w-xs">
+        <div className='pt-4'>
+            <h2 className='text-center text-lg'>Filter</h2>
+            <div className="form-control w-full">
                 <label className='label'>
-                    <span className='label-text'>Pick a filter</span>
+                    <span className='label-text text-base'>Pick a filter</span>
                 </label>
-                <select className='select select-bordered' value={selectedLabel} onChange={e => setSelectedLabel(e.target.value)}>
+                <select className='select select-bordered text-base' value={selectedLabel} onChange={e => setSelectedLabel(e.target.value)}>
                 {data.map(value => (
-                    //補顏色
-                    <option key={value.id} value={value.name}>{value.name}</option>
+                    <option key={value.id} value={value.name} className="text-lg">{value.name}</option>
                 ))}
                 </select>
             </div>
@@ -160,7 +153,7 @@ function SearchBox({searchString, setSearchString}:{searchString:string, setSear
     return (
         <div className="form-control w-full h-[10%] items-center">
             <form className="h-full input-group justify-center items-center" method='POST' onSubmit={handleSubmit}>
-                <input type="text" name='search' placeholder='Search' defaultValue={searchString} className="input input-bordered w-1/6 h-2/3" />
+                <input type="text" name='search' placeholder='Search' defaultValue={searchString} className="input input-bordered w-1/6 h-2/3 text-lg" />
                 <button className="btn btn-square h-2/3" type='submit'>
                     <CgSearch className='w-1/2 h-1/2'/>
                 </button>
@@ -182,19 +175,19 @@ function DisplayIssue()
     return (
         <div className='h-full flex flex-col'>
             <SearchBox searchString={searchString} setSearchString={setSearchString}/>
-            <div className='flex bg-red-500 h-[90%]'>
-                <div className='flex flex-col w-1/6 gap-y-4 divide-y bg-blue-200'>
-                    <h3 className='text-center pt-2'>Welcome {username.toString()}</h3>
+            <div className='flex h-[90%]'>
+                <div className='flex flex-col w-1/6 gap-y-4 divide-y bg-blue-200 px-2'>
+                    <h3 className='text-center text-lg pt-4'>Welcome {username.toString()}</h3>
                     <LabelsSel selectedLabel={selectedLabel} setSelectedLabel={setSelectedLabel}/>
-                    <div>
-                        <h2>Sort</h2>                        
-                        <form className="form-control">
+                    <div className='flex flex-col items-center pt-4'>
+                        <h2 className='text-lg'>Sort</h2>                        
+                        <form className="form-control w-full">
                             <label className="label cursor-pointer">
-                                <span className="label-text">Newest</span> 
+                                <span className="label-text text-base">Newest</span> 
                                 <input type="radio" value="newest" onChange={handleSort} checked={!sortByOld} className="radio checked:bg-red-500" />
                             </label>
                             <label className="label cursor-pointer">
-                                <span className="label-text">Oldest</span> 
+                                <span className="label-text text-base">Oldest</span> 
                                 <input type="radio" value="oldest" onChange={handleSort} checked={sortByOld} className="radio checked:bg-blue-500" />
                             </label>
                         </form>

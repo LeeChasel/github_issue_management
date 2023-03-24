@@ -37,8 +37,8 @@ export default function CreateIssueUI({token}:{token:string})
 
     return (
         <>
-        <button onClick={() => setIsopen(true)} className="btn gap-1 w-1/6 self-end mr-10 my-3">
-            <IoIosAddCircleOutline className='h-5 w-5'/>
+        <button onClick={() => setIsopen(true)} className="btn gap-2 w-1/6 self-end mr-11 my-3 text-lg">
+            <IoIosAddCircleOutline className='h-6 w-6'/>
             Create Issue
         </button>
         <Dialog open={isopen} onClose={() => setIsopen(false)} className="w-full h-full relative z-50">

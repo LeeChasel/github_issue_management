@@ -30,7 +30,7 @@ export default function UpdateLabelUI({token, issue_number}:{token:string, issue
     }
     return (
         <div className="dropdown dropdown-right">
-            <label tabIndex={0} className="btn btn-ghost mx-1"><AiOutlineSetting/></label>
+            <label tabIndex={0} className="btn btn-ghost"><AiOutlineSetting className='w-5 h-5'/></label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-48">
                 <p className='text-center'>Set State</p>
                 {labels.map(label => (
