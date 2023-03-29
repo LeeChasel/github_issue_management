@@ -1,22 +1,22 @@
 import './globals.css'
-import AuthContext from './AA';
+import Providers from './providers';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode,
-}) {
+export const metadata = {
+  title: "Task Management",
+  description: "Chasel's dcard intern homework",
+}
 
+export default function RootLayout({children}: {children: React.ReactNode}) 
+{
   return (
-    // <AuthContext>
       <html lang="en" className='h-full'>
-        {/*
-          <head /> will contain the components returned by the nearest parent
-          head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-        */}
-        <head />
-        <body className='h-full'>{children}</body>
+        <body className='h-full'>
+          <Providers>
+            <main className='h-full'>
+              {children}
+            </main>
+          </Providers>
+        </body>
       </html>
-    // </AuthContext>
   )
 }
