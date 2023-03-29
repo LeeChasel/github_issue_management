@@ -1,5 +1,4 @@
 import './globals.css'
-// import { SessionProvider } from "next-auth/react"
 import AuthContext from './AA';
 
 export default function RootLayout({
@@ -18,6 +17,6 @@ export default function RootLayout({
         <head />
         <body className='h-full'>{children}</body>
       </html>
-      // </AuthContext>
+    // </AuthContext>
   )
 }

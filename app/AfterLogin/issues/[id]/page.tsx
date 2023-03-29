@@ -12,8 +12,6 @@ import UpdateLabelUI from "@/app/components/(updateLabelUI)";
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { GrCaretPrevious } from 'react-icons/gr'
 import { useRouter } from "next/navigation";
-import ReactMarkdown from 'react-markdown'
-// import remarkGfm from 'remark-gfm'
 
 let issue_number = "";
 let token = "";
@@ -161,7 +159,7 @@ function IssueInfo()
 
 export default function IssueDetailPage({params}:{params:{id: string}})
 {
-    const searchParams = useSearchParams();
+    const searchParams = useSearchParams()!;
     token = searchParams.get("access_token")!;
     issue_number = params.id;
     username = setUsername();

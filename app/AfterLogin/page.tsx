@@ -206,7 +206,7 @@ function DisplayIssue()
 
 export default function afterLogin()
 {
-    const searchParams = useSearchParams();
+    const searchParams = useSearchParams()!;
     token = searchParams.get("access_token")!;
     username = setUsername();
     return (
