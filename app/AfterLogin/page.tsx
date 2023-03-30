@@ -167,6 +167,12 @@ function DisplayIssue()
     const [selectedLabel, setSelectedLabel] = useState("All");
     const [searchString, setSearchString] = useState("");
     const [sortByOld, setSortByOld] = useState(false);
+    const [a, setA] = useState({
+        a1: "All",
+        a2: "bb",
+        a3: false
+    })
+    
 
     function handleSort(e:ChangeEvent<HTMLInputElement>)
     {
