@@ -6,10 +6,13 @@ import { useEffect } from "react";
 export default function AuthPopup()
 {
     const { data: session, status } = useSession();
-
     useEffect(() => {
         if (!(status === "loading") && !session) void signIn("github");
-        if (session) window.close();
+        if (session)
+        {
+            window.opener.location.reload()
+            window.close();
+        }
     }, [session, status]);
 
     return (

@@ -167,20 +167,20 @@ function DisplayIssue()
     const [selectedLabel, setSelectedLabel] = useState("All");
     const [searchString, setSearchString] = useState("");
     const [sortByOld, setSortByOld] = useState(false);
-    const [a, setA] = useState({
-        a1: "All",
-        a2: "bb",
-        a3: false
-    })
-    
-
+    // const [a, setA] = useState({
+    //     a1: "All",
+    //     a2: "bb",
+    //     a3: false
+    // })
     function handleSort(e:ChangeEvent<HTMLInputElement>)
     {
         setSortByOld(e.target.value === "oldest")
     }
     return (
         <div className='h-full flex flex-col'>
+
             <SearchBox searchString={searchString} setSearchString={setSearchString}/>
+            
             <div className='flex h-[90%]'>
                 <div className='flex flex-col w-1/6 gap-y-4 divide-y bg-blue-200 px-2'>
                     <h3 className='text-center text-lg pt-4'>Welcome {username.toString()}</h3>
