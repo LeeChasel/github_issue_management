@@ -1,45 +1,40 @@
-// 'use client'
+'use client'
 
 import LoginBtn from './login-btn';
 import { useSession } from "next-auth/react"
 // import { FormEvent, useState } from 'react';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-
-import { CgSearch } from 'react-icons/cg'
-import { BsInfoCircle } from 'react-icons/bs'
 // import Btn from "./btn";
-
-// function SearchBar({searchString, setSearchString}:{searchString:string, setSearchString:any})
-// {
-//     function handleSubmit(e:FormEvent<HTMLFormElement>)
-//     {
-//         e.preventDefault();
-//         setSearchString(e.currentTarget.search.value);
-//     }
-//     return (
-//         <div className="form-control w-full h-[10%] items-center">
-//             <form className="h-full input-group justify-center items-center" method='POST' onSubmit={handleSubmit}>
-//                 <input type="text" name='search' placeholder='Search' defaultValue={searchString} className="input input-bordered w-1/6 h-2/3 text-lg" />
-//                 <button className="btn btn-square h-2/3" type='submit'>
-//                     <CgSearch className='w-1/2 h-1/2'/>
-//                 </button>
-//              </form>
-//         </div>
-//     )
-// }
-
-export default async function Home() 
+import { useState } from 'react'
+import SearchBar from './searchBar';
+import LabelSelector from './labelSelector';
+function Home({username}:{username:string})
 {
-  // const { data: session } = useSession()
-  const session = await getServerSession(authOptions);
+  const [selectedLabel, setSelectedLabel] = useState("All");
+  const [searchString, setSearchString] = useState("");
+  const [sortByOld, setSortByOld] = useState(false);
 
-  console.log("re-render")
-  if (!session) return <LoginBtn/>
-  
   return (
     <div className='h-full flex flex-col'>
-      {JSON.stringify(session)}
+      <SearchBar searchString={searchString} setSearchString={setSearchString}/>
+      <div className='flex h-[90%]'>
+        <div className='flex flex-col w-1/6 gap-y-4 divide-y bg-blue-200 px-2'>
+          <h3 className='text-center text-lg pt-4'>Welcome {username}</h3>
+          <LabelSelector selectedLabel={selectedLabel} setSelectedLabel={setSelectedLabel}/>
+        </div>
+
+      </div>
     </div>
   )
+}
+
+export default function LoginState() 
+{
+  const { data: session } = useSession()
+  // const session = await getServerSession(authOptions);
+  // console.log("re-render")
+  console.log(session)
+  if (!session) return <LoginBtn/>
+  return <Home username={session.user.username}/>
 }

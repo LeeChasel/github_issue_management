@@ -10,7 +10,7 @@ export default function AuthPopup()
         if (!(status === "loading") && !session) void signIn("github");
         if (session)
         {
-            window.opener.location.reload()
+            // window.opener.location.reload()
             window.close();
         }
     }, [session, status]);
