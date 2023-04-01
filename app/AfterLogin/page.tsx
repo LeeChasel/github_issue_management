@@ -64,7 +64,7 @@ function DataList({selectedLabel, searchString, sortByOld}:{selectedLabel:string
             setPage(prev => prev + 1);
         });
     };
-    const router = useRouter();    
+    const router = useRouter();
     return (
         <>
             <InfiniteScroll

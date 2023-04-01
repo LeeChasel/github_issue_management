@@ -1,8 +1,8 @@
 'use client'
-import { FormEvent } from 'react'
+import { Dispatch, FormEvent, SetStateAction, memo } from 'react'
 import { CgSearch } from 'react-icons/cg'
 
-function SearchBar({searchString, setSearchString}:{searchString:string, setSearchString:any})
+function SearchBar({searchString, setSearchString}:{searchString:string, setSearchString:Dispatch<SetStateAction<string>>})
 {
     function handleSubmit(e:FormEvent<HTMLFormElement>)
     {
@@ -21,4 +21,4 @@ function SearchBar({searchString, setSearchString}:{searchString:string, setSear
     )
 }
 
-export default SearchBar;
+export default memo(SearchBar);
