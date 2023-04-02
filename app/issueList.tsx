@@ -1,41 +1,32 @@
 'use client'
 
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BsInfoCircle } from "react-icons/bs";
 import InfiniteScroll from "react-infinite-scroll-component";
+import type { FormIssue } from "@/types/FormIssue";
 
-type FormIssues = {
-    title: string;
-    body: string; 
-    number: string;
-    user: {
-        login:string;
-    };
-    labels: {
-        color: string;
-        id: number;
-        name: string;
-    }[];
-}
-
-function getIssuesWithSearchstring(token:string, page:number, label:string, sortByOld:boolean, searchstring:string)
+async function getIssuesWithSearchstring(token:string, page:number, label:string, sortByOld:boolean, searchstring:string)
 {
     const pageSize = 10;
     const order = sortByOld ? "asc" : "desc";
     const queryString = 'q=' + encodeURIComponent(`${searchstring} repo:${process.env.NEXT_PUBLIC_REPO_OWNER}/${process.env.NEXT_PUBLIC_REPO_NAME} type:issue in:title,body,comments state:open ${label == "All" ? "" : `label:${label}`}`)
-    return fetch(`https://api.github.com/search/issues?per_page=${pageSize}&page=${page}&sort=created&order=${order}&${queryString}`, {
+    const res = await fetch(`https://api.github.com/search/issues?per_page=${pageSize}&page=${page}&sort=created&order=${order}&${queryString}`, {
         headers: {
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
         },
-        // cache: "no-cache",
-    }).then(res => res.json()).then(json => json.items).catch(err => console.log(err));
+    })
+    if (!res.ok) window.alert("Failed to fetch issues")
+    const json = await res.json();
+    const data = json.items;
+    return data;
 }
 
 export default function IssueList({selectedLabel, searchString, sortByOld}:{selectedLabel:string, searchString:string, sortByOld:boolean})
 {
-    const [ items, setItems ] = useState<FormIssues[]>([]);
+    const [ items, setItems ] = useState<FormIssue[]>([]);
     const [ hasMore, setHasMore ] = useState(true);
     const [ page,  setPage ] = useState(1);
     const { data: session } = useSession()
@@ -64,6 +55,7 @@ export default function IssueList({selectedLabel, searchString, sortByOld}:{sele
         });
     };
 
+    const router = useRouter()
     return (
         <>
             <InfiniteScroll
@@ -92,8 +84,8 @@ export default function IssueList({selectedLabel, searchString, sortByOld}:{sele
                         </tr>
                     </thead>
                     <tbody>
-                        {items && items.map((item:FormIssues) => (
-                            <tr key={item.number} className="bg-red-200 hover cursor-pointer h-28">
+                        {items && items.map((item:FormIssue) => (
+                            <tr key={item.number} onClick={() => router.push(`/issues/${item.number}`)} className="bg-red-200 hover cursor-pointer h-28">
                                 <th className='text-lg pl-8 rounded-bl-none'>{item.number}</th>
                                 <td className='text-lg'>{item.title}</td>
                                 <td className='text-lg'>{item.body}</td>

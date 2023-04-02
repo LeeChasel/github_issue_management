@@ -2,6 +2,7 @@
 import useLabels from "@/hooks/useLabels";
 import { useSession } from "next-auth/react";
 import { Dispatch, SetStateAction, memo } from "react";
+import type { Label } from "@/types/FormLabel";
 function LabelSelector({selectedLabel, setSelectedLabel}:{selectedLabel:string, setSelectedLabel: Dispatch<SetStateAction<string>>})
 {
     const { data: session } = useSession()
@@ -19,7 +20,7 @@ function LabelSelector({selectedLabel, setSelectedLabel}:{selectedLabel:string, 
                 </label>
                 <select className='select select-bordered text-base' value={selectedLabel} onChange={e => setSelectedLabel(e.target.value)}>
                     <option value="All" className="text-lg">All</option>
-                    {labels.map((label:{id:number, name:string}) => (
+                    {labels.map((label:Label) => (
                         <option key={label.id} value={label.name} className="text-lg">{label.name}</option>
                     ))}
                 </select>

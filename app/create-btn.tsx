@@ -31,7 +31,7 @@ function CreateBtn()
     const [ isopen, setIsopen ] = useState(false);
     const { data: session } = useSession();
 
-    function handleSubmit(e:any)
+    async function handleSubmit(e:any)
     {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -40,14 +40,22 @@ function CreateBtn()
         const formJson = Object.fromEntries(formData.entries());
         let newFormJson:any = formJson
         if (newFormJson.labels) newFormJson.labels = [newFormJson.labels];
-        fetch(`https://api.github.com/repos/${process.env.NEXT_PUBLIC_REPO_OWNER}/${process.env.NEXT_PUBLIC_REPO_NAME}/issues`, {
+        const res = await fetch(`https://api.github.com/repos/${process.env.NEXT_PUBLIC_REPO_OWNER}/${process.env.NEXT_PUBLIC_REPO_NAME}/issues`, {
             headers: {
                 "Accept" : "application/vnd.github+json",
                 "Authorization" : `Bearer ${session?.user.token}`,
             },
             method: "POST",
             body: JSON.stringify(newFormJson)
-        }).then(() => window.location.reload()).catch(err => console.log(err));
+        })
+
+        if (res.ok)
+        {
+            window.alert("Created issue successfully")
+            window.location.reload()
+        } else {
+            window.alert("Failed to create issue")
+        }
     }
 
     return (
