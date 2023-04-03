@@ -6,6 +6,7 @@ import IssueList from "./issueList";
 import LabelSelector from "./labelSelector";
 import SearchBar from "./searchBar";
 import SortBtn from "./sort-btn";
+import SignOutBtn from "./signOut-btn";
 
 export default function Home({children}:{children: React.ReactNode})
 {
@@ -20,6 +21,7 @@ export default function Home({children}:{children: React.ReactNode})
           {children}
           <LabelSelector selectedLabel={selectedLabel} setSelectedLabel={setSelectedLabel}/>
           <SortBtn sortByOld={sortByOld} setSortByOld={setSortByOld}/>
+          <SignOutBtn/>
         </div>
         <div className='flex flex-col w-5/6 h-full bg-yellow-300'>
           <CreateBtn/>
