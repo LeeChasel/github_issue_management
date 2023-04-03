@@ -17,11 +17,11 @@ async function getIssuesWithSearchstring(token:string, page:number, label:string
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
         },
-    }).then(r => r.json()).then(q => q.items).catch(err => window.alert(err))
-    // if (!res.ok) window.alert("Failed to fetch issues")
-    // const json = await res.json();
-    // const data = json.items;
-    return res;
+    })
+    if (!res.ok) window.alert("Failed to fetch issues")
+    const json = await res.json();
+    const data = json.items;
+    return data;
 }
 
 export default function IssueList({selectedLabel, searchString, sortByOld}:{selectedLabel:string, searchString:string, sortByOld:boolean})
@@ -31,9 +31,11 @@ export default function IssueList({selectedLabel, searchString, sortByOld}:{sele
     const [ page,  setPage ] = useState(1);
     const { data: session } = useSession()
 
+    if (!session) return <div>Loading session token...</div>
+
     useEffect(() => {
         let isCancelled = false;
-        getIssuesWithSearchstring(session?.user.token, 1, selectedLabel, sortByOld, searchString).then(res => {
+        getIssuesWithSearchstring(session.user.token, 1, selectedLabel, sortByOld, searchString).then(res => {
             if (!isCancelled)
             {
                 setPage(1);
