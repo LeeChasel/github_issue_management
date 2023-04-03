@@ -9,16 +9,21 @@ import type { FormIssue } from "@/types/FormIssue";
 
 async function getIssuesWithSearchstring(token:string, page:number, label:string, sortByOld:boolean, searchstring:string)
 {
+    const { data: session } = useSession();
+    if (!session) return <div>Wait</div>
     const pageSize = 10;
     const order = sortByOld ? "asc" : "desc";
     const queryString = 'q=' + encodeURIComponent(`${searchstring} repo:${process.env.NEXT_PUBLIC_REPO_OWNER}/${process.env.NEXT_PUBLIC_REPO_NAME} type:issue in:title,body,comments state:open ${label == "All" ? "" : `label:${label}`}`)
     const res = await fetch(`https://api.github.com/search/issues?per_page=${pageSize}&page=${page}&sort=created&order=${order}&${queryString}`, {
         headers: {
             "Accept" : "application/vnd.github+json",
-            "Authorization" : `Bearer ${token}`,
+            "Authorization" : `Bearer ${session.user.token}`,
         },
     })
-    if (!res.ok) window.alert("Failed to fetch issues")
+    if (!res.ok) 
+    {
+        throw new Error('Failed to fetch data');
+    }
     const json = await res.json();
     const data = json.items;
     return data;
