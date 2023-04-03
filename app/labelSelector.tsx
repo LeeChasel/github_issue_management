@@ -1,14 +1,10 @@
 'use client'
 import useLabels from "@/hooks/useLabels";
-import { useSession } from "next-auth/react";
 import { Dispatch, SetStateAction, memo } from "react";
 import type { Label } from "@/types/FormLabel";
-function LabelSelector({selectedLabel, setSelectedLabel}:{selectedLabel:string, setSelectedLabel: Dispatch<SetStateAction<string>>})
-{
-    const { data: session } = useSession()
-    if (!session) return <div>Please Login</div>
-    
-    const { labels, isError, isLoading } = useLabels(session.user.token);
+function LabelSelector({token, selectedLabel, setSelectedLabel}:{token:string, selectedLabel:string, setSelectedLabel: Dispatch<SetStateAction<string>>})
+{   
+    const { labels, isError, isLoading } = useLabels(token);
     if (isLoading) return <div>Loading</div>
     if (isError) return <div>Error</div>
     return (

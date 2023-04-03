@@ -9,7 +9,7 @@ export default async function LoginState()
   const session = await getServerSession(authOptions);
   if (!session) return <LoginBtn/>
   return (
-    <Home>
+    <Home token={session.user.token}>
       <Welcome username={session.user.username}/>
     </Home>
   )

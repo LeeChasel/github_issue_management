@@ -9,15 +9,13 @@ import type { FormIssue } from "@/types/FormIssue";
 
 async function getIssuesWithSearchstring(token:string, page:number, label:string, sortByOld:boolean, searchstring:string)
 {
-    const { data: session } = useSession();
-    if (!session) return <div>Wait</div>
     const pageSize = 10;
     const order = sortByOld ? "asc" : "desc";
     const queryString = 'q=' + encodeURIComponent(`${searchstring} repo:${process.env.NEXT_PUBLIC_REPO_OWNER}/${process.env.NEXT_PUBLIC_REPO_NAME} type:issue in:title,body,comments state:open ${label == "All" ? "" : `label:${label}`}`)
     const res = await fetch(`https://api.github.com/search/issues?per_page=${pageSize}&page=${page}&sort=created&order=${order}&${queryString}`, {
         headers: {
             "Accept" : "application/vnd.github+json",
-            "Authorization" : `Bearer ${session.user.token}`,
+            "Authorization" : `Bearer ${token}`,
         },
     })
     if (!res.ok) 
@@ -29,18 +27,15 @@ async function getIssuesWithSearchstring(token:string, page:number, label:string
     return data;
 }
 
-export default function IssueList({selectedLabel, searchString, sortByOld}:{selectedLabel:string, searchString:string, sortByOld:boolean})
+export default function IssueList({token, selectedLabel, searchString, sortByOld}:{token:string, selectedLabel:string, searchString:string, sortByOld:boolean})
 {
     const [ items, setItems ] = useState<FormIssue[]>([]);
     const [ hasMore, setHasMore ] = useState(true);
     const [ page,  setPage ] = useState(1);
-    const { data: session } = useSession()
-
-    if (!session) return <div>Loading session token...</div>
 
     useEffect(() => {
         let isCancelled = false;
-        getIssuesWithSearchstring(session.user.token, 1, selectedLabel, sortByOld, searchString).then(res => {
+        getIssuesWithSearchstring(token, 1, selectedLabel, sortByOld, searchString).then(res => {
             if (!isCancelled)
             {
                 setPage(1);
@@ -55,7 +50,7 @@ export default function IssueList({selectedLabel, searchString, sortByOld}:{sele
 
     function fetchMoreData()
     {
-        getIssuesWithSearchstring(session?.user.token, page + 1, selectedLabel, sortByOld, searchString).then(res => {
+        getIssuesWithSearchstring(token, page + 1, selectedLabel, sortByOld, searchString).then(res => {
             setItems([...items, ...res]);
             setHasMore(res.length == 10);
             setPage(prev => prev + 1);
