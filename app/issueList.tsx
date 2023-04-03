@@ -17,11 +17,11 @@ async function getIssuesWithSearchstring(token:string, page:number, label:string
             "Accept" : "application/vnd.github+json",
             "Authorization" : `Bearer ${token}`,
         },
-    })
-    if (!res.ok) window.alert("Failed to fetch issues")
-    const json = await res.json();
-    const data = json.items;
-    return data;
+    }).then(r => r.json()).then(q => q.items).catch(err => window.alert(err))
+    // if (!res.ok) window.alert("Failed to fetch issues")
+    // const json = await res.json();
+    // const data = json.items;
+    return res;
 }
 
 export default function IssueList({selectedLabel, searchString, sortByOld}:{selectedLabel:string, searchString:string, sortByOld:boolean})
