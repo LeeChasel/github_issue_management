@@ -20,7 +20,7 @@ export default function LoginBtn()
 
     return (
         <div className='flex items-center justify-center h-screen'>
-            <button className="btn gap-2 w-1/4 h-1/4 text-xl" onClick={callPopup}>
+            <button className="btn btn-primary bg-amber-400 hover:bg-amber-500 gap-2 w-1/4 h-1/4 text-2xl" onClick={callPopup}>
                 <BsGithub className='w-7 h-7'/>
                 Login With Github
             </button>

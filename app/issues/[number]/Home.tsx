@@ -9,7 +9,7 @@ import CreateCommentBtn from "./createComment-btn";
 export default function Home({issueContent, labels, children}:{issueContent:any, labels:any, children:React.ReactNode})
 {
     const { data: session} = useSession();
-    if (!session) return <div>Plase Logging</div>
+    if (!session) return <div>Plase Login</div>
     return (
     <div className="h-full flex flex-col">
             <IssueTitle data={issueContent} username={session.user.username}/>

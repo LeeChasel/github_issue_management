@@ -89,6 +89,7 @@ The above fearures can implement at the same time without changing page.
 - Due to next.js new routing and [colocation](https://beta.nextjs.org/docs/routing/fundamentals#colocation), no need to use components folder to store components as before.
 - By using [next-auth.d.ts](types/next-auth.d.ts) and [[...nextauth].js](pages/api/auth/%5B...nextauth%5D.ts) to get access token from login session on server, then use it to fetch data.
 - Since the components of the issue list page are all interactive, all components are client components. But issue detail page is mostly static content, so most components of this page are server component( fetch data on server side )
+- When I want to use server component or client component in server component, an unknown error will occur, so I use client component **Home** to wrap the other component to avoid error.
 
 # How To Use
 
@@ -110,3 +111,13 @@ npm install && npm run dev
 # Online Demo
 
 Here is the [website](https://github-issue-management.vercel.app/) deployed on vercel.
+
+# Notes
+
+I use a 27 inches screen to develop, and haven't add responsive design to customize other screen sizes.
+
+## ToDo
+- [x] Make issue detail page to server component
+- [ ] Make issue list page to server component
+- [ ] Add responsive design
+- [ ] Replace react-infinite-scroll-component
