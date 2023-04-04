@@ -35,7 +35,7 @@ export default function UpdateIssueBtn({number, data}:{number:string, data:FormI
 
     return (
         <>
-        <button className="btn w-1/2 text-lg" onClick={() => setIsopen(true)}>Edit</button>
+        <button className="btn btn-primary bg-yellow-400 hover:bg-yellow-500 w-1/2 text-lg" onClick={() => setIsopen(true)}>Edit</button>
         <Dialog open={isopen} onClose={() => setIsopen(false)} className="w-full relative z-50">
             <div className="fixed inset-0 flex items-center justify-center p-4 w-full">
                 <Dialog.Panel className="w-1/3 h-2/3 rounded bg-sky-300 py-12 px-7">
@@ -55,8 +55,8 @@ export default function UpdateIssueBtn({number, data}:{number:string, data:FormI
                                 <textarea name='body' required minLength={30} className="textarea textarea-bordered h-4/5 w-full resize-none" placeholder="Comment here" defaultValue={data ? data.body : ""} />
                             </div>
                             <div className='flex w-full h-1/5 items-center justify-around'>
-                                <button className="btn w-1/3 rounded-full text-lg" onClick={() => setIsopen(false)}>Cancel</button>
-                                <button className="btn w-1/3 rounded-full text-lg" type="submit">Save</button>
+                                <button className="btn btn-primary bg-yellow-400 hover:bg-yellow-500 w-1/3 rounded-full text-lg" onClick={() => setIsopen(false)}>Cancel</button>
+                                <button className="btn btn-primary bg-yellow-400 hover:bg-yellow-500 w-1/3 rounded-full text-lg" type="submit">Save</button>
                             </div>
                         </form>
                 </Dialog.Panel>

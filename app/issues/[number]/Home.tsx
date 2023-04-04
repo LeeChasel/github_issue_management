@@ -13,14 +13,14 @@ export default function Home({issueContent, labels, children}:{issueContent:any,
     return (
     <div className="h-full flex flex-col">
             <IssueTitle data={issueContent} username={session.user.username}/>
-            <div className="flex bg-red-200 h-[90%]">
-                    <div className="flex flex-col w-1/6 bg-blue-200">
+            <div className="flex h-[90%] divide-x-2 bg-blue-400">
+                    <div className="flex flex-col w-1/6 bg-blue-400">
                         <ReturnBtn/>
                         <IssueDetail data={issueContent} session={session} labels={labels}/>
                     </div>
-                    <div className="flex justify-center h-full items-center w-5/6 bg-yellow-300">
+                    <div className="flex justify-center h-full items-center w-5/6 ">
                         <div className="w-full mx-10 h-[95%] overflow-y-auto overflow-x-hidden">
-                            <div className="w-full bg-gray-100 rounded-lg p-5">
+                            <div className="w-full bg-gray-200 rounded-lg p-5">
                                 {children}
                                 <CreateCommentBtn token={session.user.token} number={issueContent.number} />
                             </div>

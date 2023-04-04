@@ -44,8 +44,8 @@ export default function UpdateCommentBtn({token, id, text}:{token:string, id:str
                                 <textarea name='body' defaultValue={text} autoFocus required className="textarea textarea-bordered w-full h-full resize-none" placeholder="Comment here" />
                             </div>
                             <div className='flex justify-around w-full'>
-                                <button className="btn w-1/3 rounded-full text-lg" onClick={() => setIsopen(false)}>Cancel</button>
-                                <button className="btn w-1/3 rounded-full text-lg" type="submit">Update Comment</button>
+                                <button className="btn btn-primary bg-yellow-400 hover:bg-yellow-500 w-1/3 rounded-full text-lg" onClick={() => setIsopen(false)}>Cancel</button>
+                                <button className="btn btn-primary bg-yellow-400 hover:bg-yellow-500 w-1/3 rounded-full text-lg" type="submit">Update Comment</button>
                             </div>
                         </form>
                 </Dialog.Panel>

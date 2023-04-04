@@ -64,9 +64,9 @@ export default function IssueList({token, selectedLabel, searchString, sortByOld
             dataLength={items.length}
             next={fetchMoreData}
             hasMore={hasMore}
-            loader={<button className="btn btn-ghost loading disabled text-lg">loading</button>}
+            loader={<button className="btn btn-ghost w-full loading disabled text-lg">loading</button>}
             endMessage={
-                <div className="alert alert-info shadow-lg rounded-t-none justify-center">
+                <div className="alert alert-success shadow-lg rounded-t-none justify-center">
                     <div>
                         <BsInfoCircle className='w-5 h-5'/>
                         <span className='text-lg'>No more data.</span>
@@ -78,23 +78,23 @@ export default function IssueList({token, selectedLabel, searchString, sortByOld
                 <table className='table w-full'>
                     <thead>
                         <tr className='h-28'>
-                            <th className='text-base pl-8'>#</th>
-                            <th className='text-base'>Title</th>
-                            <th className='text-base'>Comment</th>
-                            <th className='text-base'>Author</th>
-                            <th className='text-base'>State</th>
+                            <th className='text-base pl-8 bg-gray-400'>#</th>
+                            <th className='text-base bg-gray-400'>Title</th>
+                            <th className='text-base bg-gray-400'>Comment</th>
+                            <th className='text-base bg-gray-400'>Author</th>
+                            <th className='text-base bg-gray-400'>State</th>
                         </tr>
                     </thead>
                     <tbody>
                         {items && items.map((item:FormIssue) => (
-                            <tr key={item.number} onClick={() => router.push(`/issues/${item.number}`)} className="bg-red-200 hover cursor-pointer h-28">
-                                <th className='text-lg pl-8 rounded-bl-none'>{item.number}</th>
-                                <td className='text-lg'>{item.title}</td>
-                                <td className='text-lg'>{item.body}</td>
-                                <td className='text-lg'>{item.user.login}</td>
-                                <td className='rounded-br-none'>
+                            <tr key={item.number} onClick={() => router.push(`/issues/${item.number}`)} className="hover:bg-gray-300 hover cursor-pointer h-28">
+                                <th className='text-lg pl-8 rounded-bl-none bg-gray-200'>{item.number}</th>
+                                <td className='text-lg bg-gray-200 '>{item.title}</td>
+                                <td className='text-lg bg-gray-200 '>{item.body}</td>
+                                <td className='text-lg bg-gray-200'>{item.user.login}</td>
+                                <td className='rounded-br-none bg-gray-200'>
                                     {item.labels.length ? (
-                                        <div className="badge text-base px-5 h-8">{item.labels[0].name}</div>
+                                        <div className="badge badge-primary text-base px-5 h-8">{item.labels[0].name}</div>
                                         ) : null
                                     }
                                 </td>

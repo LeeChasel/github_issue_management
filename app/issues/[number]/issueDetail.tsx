@@ -7,7 +7,7 @@ export default function IssueDetail({data, session, labels}:{data:FormIssue, ses
     return (
         <div className="flex flex-col w-full px-3">
             <dl>
-                <div className="bg-gray-100 grid grid-cols-3 gap-4 p-5 text-lg">
+                <div className="bg-gray-100 grid grid-cols-3 gap-4 p-5 text-lg rounded-t-lg">
                     <dt>ID</dt>
                     <dd className="col-span-2">{data.number}</dd>
                 </div>
@@ -28,11 +28,11 @@ export default function IssueDetail({data, session, labels}:{data:FormIssue, ses
                     <dt>Created Time</dt>
                     <dd className="col-span-2">{data ? new Date(data.created_at.toString()).toLocaleString() : ""}</dd>
                 </div>
-                <div className="bg-gray-100 grid grid-cols-3 gap-4 p-5 text-lg">
+                <div className="bg-gray-100 grid grid-cols-3 gap-4 p-5 text-lg rounded-b-lg">
                     <dt>Updated Time</dt>
                     <dd className="col-span-2">{data ? new Date(data.updated_at.toString()).toLocaleString() : ""}</dd>
                 </div>
-            </dl>              
+            </dl>             
         </div>
     )
 }

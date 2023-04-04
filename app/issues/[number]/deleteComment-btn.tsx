@@ -33,8 +33,8 @@ export default function DeleteCommentBtn({token, id}:{token:string, id:string})
                 <Dialog.Panel className="w-1/3 h-1/4 rounded bg-sky-300 py-12 px-7">
                     <Dialog.Title className="text-3xl font-bold text-center">Sure To Delete The Comment?</Dialog.Title>
                         <div className='flex justify-around mt-12'>
-                            <button className="btn w-1/3 rounded-full text-lg" onClick={() => setIsopen(false)}>Cancel</button>
-                            <button className="btn w-1/3 rounded-full text-lg" onClick={handleDelete}>Delete</button>
+                            <button className="btn btn-primary bg-yellow-400 hover:bg-yellow-500 w-1/3 rounded-full text-lg" onClick={() => setIsopen(false)}>Cancel</button>
+                            <button className="btn btn-primary bg-yellow-400 hover:bg-yellow-500 w-1/3 rounded-full text-lg" onClick={handleDelete}>Delete</button>
                         </div>
                 </Dialog.Panel>
             </div>

@@ -31,7 +31,7 @@ export default function CreateCommentBtn({token, number}:{token:string, number:s
 
     return (
         <div className='flex justify-end'>
-            <button onClick={() => setIsopen(true)} className="btn btn-wide text-lg">Write Comment</button>
+            <button onClick={() => setIsopen(true)} className="btn btn-primary bg-yellow-400 hover:bg-yellow-500 btn-wide text-lg">Write Comment</button>
             <Dialog open={isopen} onClose={() => setIsopen(false)} className="w-full relative z-50">
                 <div className="fixed inset-0 flex items-center justify-center p-4 w-full">
                     <Dialog.Panel className="w-1/2 h-96 rounded bg-sky-300 py-12 px-7">
@@ -44,8 +44,8 @@ export default function CreateCommentBtn({token, number}:{token:string, number:s
                                     <textarea name='body' autoFocus required className="textarea textarea-bordered w-full h-full resize-none" placeholder="Comment here" />
                                 </div>
                                 <div className='flex justify-around w-full'>
-                                    <button className="btn w-1/3 rounded-full text-lg" onClick={() => setIsopen(false)}>Cancel</button>
-                                    <button className="btn w-1/3 rounded-full text-lg" type="submit">Comment</button>
+                                    <button className="btn btn-primary bg-yellow-400 hover:bg-yellow-500 w-1/3 rounded-full text-lg" onClick={() => setIsopen(false)}>Cancel</button>
+                                    <button className="btn btn-primary bg-yellow-400 hover:bg-yellow-500 w-1/3 rounded-full text-lg" type="submit">Comment</button>
                                 </div>
                             </form>
                     </Dialog.Panel>

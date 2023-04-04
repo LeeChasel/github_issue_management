@@ -60,7 +60,7 @@ function CreateBtn()
 
     return (
         <>
-            <button onClick={() => setIsopen(true)} className="btn gap-2 w-1/6 self-end mr-11 my-3 text-lg">
+            <button onClick={() => setIsopen(true)} className="btn btn-primary bg-yellow-300 hover:bg-yellow-400 gap-2 w-1/6 self-end mr-11 my-3 text-lg">
             <IoIosAddCircleOutline className='h-6 w-6'/>Create Issue            
             </button>
             
@@ -84,8 +84,8 @@ function CreateBtn()
                                     </div>
                                     {(session?.user.username == process.env.NEXT_PUBLIC_REPO_OWNER) && <SelectLabel token={session?.user.token} />}
                                     <div className='flex w-full h-1/5 items-center justify-around'>
-                                        <button className="btn w-1/3 rounded-full" onClick={() => setIsopen(false)}>Cancel</button>
-                                        <button className="btn w-1/3 rounded-full" type="submit">Create</button>
+                                        <button className="btn btn-primary bg-yellow-300 hover:bg-yellow-400 w-1/3 rounded-full" onClick={() => setIsopen(false)}>Cancel</button>
+                                        <button className="btn btn-primary bg-yellow-300 hover:bg-yellow-400 w-1/3 rounded-full" type="submit">Create</button>
                                     </div>
                                 </form> 
                     </Dialog.Panel>
