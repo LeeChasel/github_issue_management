@@ -6,7 +6,7 @@ This is a tool to manage open issue on github.
 
 - SearchBar
 - Sort issue from newest to oldest or oldest to newest
-- Display issue for a single label ( every labels in repo )
+- Display issue for a single label (every labels in repo)
 
 The above fearures can implement at the same time without changing page.
 
