@@ -1,5 +1,3 @@
-'use client'
-
 import DeleteIssueBtn from "./deleteIssue-btn";
 import UpdateIssueBtn from "./updateIssue-btn";
 import type { FormIssue } from "@/types/FormIssue";

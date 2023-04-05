@@ -1,3 +1,5 @@
+'use client'
+
 import { FormIssue } from "@/types/FormIssue";
 import type { Session } from "next-auth";
 import UpdateLabelBtn from "./updateLabel-btn";

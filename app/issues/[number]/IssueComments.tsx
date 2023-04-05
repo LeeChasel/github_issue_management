@@ -34,7 +34,7 @@ async function getIssueData(token:string, number:string):Promise<FormIssue>
 export default async function IssueComments({number}:{number:string})
 {  
     const session = await getServerSession(authOptions);
-    if(!session) return <div>Not loggin</div>
+    if(!session) return <div>Not login</div>
 
     const issueContentData = getIssueData(session.user.token, number);
     const commentsData = getComments(session.user.token, number);

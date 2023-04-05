@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import LoginBtn from "@/app/login-btn";
 import Home from "./Home";
 import IssueComments from "./IssueComments";
+import IssueTitle from "./issueTitle";
 export function generateMetadata({ params }:{params:{number:string}}) {
     return { 
         title: `Issue ${params.number}`,
@@ -48,9 +49,12 @@ export default async function Page({params}:{params:{number:string}})
     const [issueContent, labels] = await Promise.all([issueContentData, labelsData]);
 
     return (
-        <Home issueContent={issueContent} labels={labels}>
-            {/* @ts-expect-error Async Server Component */}
-            <IssueComments number={params.number}/>
-        </Home>
+        <div className="h-full flex flex-col">
+            <IssueTitle data={issueContent} username={session.user.username}/>
+            <Home issueContent={issueContent} labels={labels}>
+                {/* @ts-expect-error Async Server Component */}
+                <IssueComments number={params.number}/>
+            </Home>
+        </div>
     )    
 }
